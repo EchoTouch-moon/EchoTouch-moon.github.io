@@ -351,6 +351,15 @@ sup a { font-family: "IBM Plex Mono", monospace; font-size: 0.72em; padding-left
 /* ---------- about ---------- */
 
 .portrait-row { display: flex; gap: 1.4rem; align-items: flex-start; margin-top: 1.6rem; }
+.portrait-row .avatar {
+  flex: 0 0 auto;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  border: 1.5px solid var(--primary);
+  object-fit: cover;
+  background: radial-gradient(circle at 32% 28%, rgba(138, 84, 28, 0.18), transparent 65%);
+}
 .monogram {
   flex: 0 0 auto;
   width: 108px; height: 108px;

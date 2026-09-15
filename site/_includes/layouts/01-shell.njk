@@ -8,7 +8,7 @@
   <meta property="og:title" content="{{ title }} — {{ sites.ink.name }}">
   <meta property="og:description" content="{{ description or sites.ink.description }}">
   <meta property="og:type" content="{{ ogType or 'website' }}">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%232b1d10'/><circle cx='50' cy='50' r='42' fill='none' stroke='%23decba9' stroke-width='3'/><text x='50' y='63' text-anchor='middle' font-size='42' font-family='Georgia,serif' font-weight='bold' fill='%23fbf3e4'>ET</text></svg>">
+  <link rel="icon" href="{{ (sites.ink.assetPath | sitePath('favicon.svg')) | url }}" type="image/svg+xml">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
