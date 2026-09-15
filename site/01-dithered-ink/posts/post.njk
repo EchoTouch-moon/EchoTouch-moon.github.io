@@ -3,7 +3,7 @@ pagination:
   data: collections.posts
   size: 1
   alias: post
-permalink: "01-dithered-ink/posts/{{ post.data.slug }}/index.html"
+permalink: "posts/{{ post.data.slug }}/index.html"
 layout: layouts/01-shell.njk
 eleventyComputed:
   title: "{{ post.data.title }}"
@@ -37,4 +37,4 @@ eleventyComputed:
   {% endif %}
 </article>
 
-<p class="backlink"><a href="{{ ('/' ~ sites.ink.path ~ '/') | url }}">← back to entries</a></p>
+<p class="backlink"><a href="{{ (sites.ink.path | sitePath) | url }}">← back to entries</a></p>

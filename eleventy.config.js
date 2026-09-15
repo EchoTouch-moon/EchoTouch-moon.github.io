@@ -17,6 +17,14 @@ function adjacentPost(collection, current, offset) {
   return index < 0 ? null : collection[index + offset] || null;
 }
 
+function joinSitePath(base, subpath = "") {
+  const theme = String(base ?? "").replace(/^\/+|\/+$/g, "");
+  const rest = String(subpath ?? "").replace(/^\/+/, "");
+  if (theme && rest) return `/${theme}/${rest}`;
+  if (theme) return `/${theme}/`;
+  return rest ? `/${rest}` : "/";
+}
+
 export default function (eleventyConfig) {
   eleventyConfig.addPlugin(syntaxHighlight);
 
@@ -30,11 +38,9 @@ export default function (eleventyConfig) {
 
   eleventyConfig.setLibrary("md", markdown);
 
-  // Keep the two hand-built visual systems as-is. Eleventy only supplies
-  // their content and routing layer.
+  // Keep the hand-built visual system as-is. Eleventy only supplies content and routing.
   eleventyConfig.addPassthroughCopy({
-    "01-dithered-ink/assets": "01-dithered-ink/assets",
-    "02-blue-notebook/assets": "02-blue-notebook/assets",
+    "01-dithered-ink/assets": "assets",
     "site/.nojekyll": ".nojekyll",
     "site/images": "images"
   });
@@ -42,7 +48,6 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("site/posts/**/*.{png,jpg,jpeg,gif,webp,svg}");
 
   eleventyConfig.addWatchTarget("01-dithered-ink/assets");
-  eleventyConfig.addWatchTarget("02-blue-notebook/assets");
 
   eleventyConfig.addCollection("posts", (collectionApi) => {
     const posts = collectionApi.getFilteredByGlob("site/posts/**/*.md");
@@ -82,8 +87,10 @@ export default function (eleventyConfig) {
     new Date(date).toISOString().slice(0, 10)
   );
 
+  eleventyConfig.addFilter("sitePath", joinSitePath);
+
   eleventyConfig.addFilter("postUrl", (post, theme) =>
-    `/${theme}/posts/${postSlug(post)}/`
+    joinSitePath(theme, `posts/${postSlug(post)}/`)
   );
 
   eleventyConfig.addFilter("olderPost", (collection, current) =>

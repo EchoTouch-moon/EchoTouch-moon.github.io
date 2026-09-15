@@ -1,6 +1,6 @@
 ---
 layout: layouts/01-shell.njk
-permalink: 01-dithered-ink/archive.html
+permalink: archive.html
 title: 归档
 description: EchoTouch 博客全部文章归档，按栏目整理。
 current: archive
@@ -42,4 +42,4 @@ current: archive
   </div>
 </section>
 
-<p class="backlink"><a href="{{ ('/' ~ sites.ink.path ~ '/') | url }}">← 返回首页</a></p>
+<p class="backlink"><a href="{{ (sites.ink.path | sitePath) | url }}">← 返回首页</a></p>

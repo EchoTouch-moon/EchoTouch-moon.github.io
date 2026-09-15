@@ -15,17 +15,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=EB+Garamond:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <script type="speculationrules">
-    { "prefetch": [ { "where": { "href_matches": "{{ ('/' ~ sites.ink.path ~ '/*') | url }}" }, "eagerness": "moderate" } ] }
+    { "prefetch": [ { "where": { "href_matches": "{{ (sites.ink.path | sitePath('*')) | url }}" }, "eagerness": "moderate" } ] }
   </script>
 
-  <link rel="stylesheet" href="{{ ('/' ~ sites.ink.path ~ '/assets/style.css?v=15') | url }}">
-  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/app.js') | url }}" defer></script>
-  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-rain.js?v=15') | url }}" defer></script>
-  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-willow.js?v=20') | url }}" defer></script>
-  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-waves.js?v=2') | url }}" defer></script>
-  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-clouds.js?v=35') | url }}" defer></script>
-  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-scroll.js?v=1') | url }}" defer></script>
-  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/dither.js?v=27') | url }}" defer></script>
+  <link rel="stylesheet" href="{{ (sites.ink.assetPath | sitePath('style.css?v=15')) | url }}">
+  <script src="{{ (sites.ink.assetPath | sitePath('app.js')) | url }}" defer></script>
+  <script src="{{ (sites.ink.assetPath | sitePath('scene-rain.js?v=15')) | url }}" defer></script>
+  <script src="{{ (sites.ink.assetPath | sitePath('scene-willow.js?v=20')) | url }}" defer></script>
+  <script src="{{ (sites.ink.assetPath | sitePath('scene-waves.js?v=2')) | url }}" defer></script>
+  <script src="{{ (sites.ink.assetPath | sitePath('scene-clouds.js?v=35')) | url }}" defer></script>
+  <script src="{{ (sites.ink.assetPath | sitePath('scene-scroll.js?v=1')) | url }}" defer></script>
+  <script src="{{ (sites.ink.assetPath | sitePath('dither.js?v=27')) | url }}" defer></script>
 </head>
 <body>
   <div class="header-image">
@@ -34,13 +34,13 @@
 
   <div class="container">
     <header>
-      <div class="masthead"><a href="{{ ('/' ~ sites.ink.path ~ '/') | url }}">{{ sites.ink.name }}</a></div>
+      <div class="masthead"><a href="{{ (sites.ink.path | sitePath) | url }}">{{ sites.ink.name }}</a></div>
       <nav class="navigation" aria-label="primary">
-        <a href="{{ ('/' ~ sites.ink.path ~ '/') | url }}"{% if current == 'entries' %} aria-current="page"{% endif %}>全部</a>
-        <a href="{{ ('/' ~ sites.ink.path ~ '/?cat=技术分析') | url }}" data-nav-filter="技术分析">技术分析</a>
-        <a href="{{ ('/' ~ sites.ink.path ~ '/?cat=日常感悟') | url }}" data-nav-filter="日常感悟">日常感悟</a>
-        <a href="{{ ('/' ~ sites.ink.path ~ '/archive.html') | url }}"{% if current == 'archive' %} aria-current="page"{% endif %}>归档</a>
-        <a href="{{ ('/' ~ sites.ink.path ~ '/about.html') | url }}"{% if current == 'about' %} aria-current="page"{% endif %}>关于</a>
+        <a href="{{ (sites.ink.path | sitePath) | url }}"{% if current == 'entries' %} aria-current="page"{% endif %}>全部</a>
+        <a href="{{ (sites.ink.path | sitePath('?cat=技术分析')) | url }}" data-nav-filter="技术分析">技术分析</a>
+        <a href="{{ (sites.ink.path | sitePath('?cat=日常感悟')) | url }}" data-nav-filter="日常感悟">日常感悟</a>
+        <a href="{{ (sites.ink.path | sitePath('archive.html')) | url }}"{% if current == 'archive' %} aria-current="page"{% endif %}>归档</a>
+        <a href="{{ (sites.ink.path | sitePath('about.html')) | url }}"{% if current == 'about' %} aria-current="page"{% endif %}>关于</a>
       </nav>
     </header>
 
@@ -50,7 +50,7 @@
 
     <footer class="site">
       <p>&copy; 2026 {{ sites.ink.copyright }}. Built from Markdown.</p>
-      <p><a href="{{ ('/' ~ sites.ink.path ~ '/archive.html') | url }}">Archive</a> · <a href="{{ ('/' ~ sites.ink.path ~ '/about.html') | url }}">About this site</a></p>
+      <p><a href="{{ (sites.ink.path | sitePath('archive.html')) | url }}">Archive</a> · <a href="{{ (sites.ink.path | sitePath('about.html')) | url }}">About this site</a></p>
       <p class="footer-controls">
         <span>Color scheme:</span>
         <span id="theme-form" class="theme-form">
