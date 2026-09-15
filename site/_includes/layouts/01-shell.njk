@@ -18,7 +18,7 @@
     { "prefetch": [ { "where": { "href_matches": "{{ (sites.ink.path | sitePath('*')) | url }}" }, "eagerness": "moderate" } ] }
   </script>
 
-  <link rel="stylesheet" href="{{ (sites.ink.assetPath | sitePath('style.css?v=15')) | url }}">
+  <link rel="stylesheet" href="{{ (sites.ink.assetPath | sitePath('style.css?v=16')) | url }}">
   <script src="{{ (sites.ink.assetPath | sitePath('app.js')) | url }}" defer></script>
   <script src="{{ (sites.ink.assetPath | sitePath('scene-rain.js?v=15')) | url }}" defer></script>
   <script src="{{ (sites.ink.assetPath | sitePath('scene-willow.js?v=20')) | url }}" defer></script>
@@ -34,7 +34,11 @@
 
   <div class="container">
     <header>
-      <div class="masthead"><a href="{{ (sites.ink.path | sitePath) | url }}">{{ sites.ink.name }}</a></div>
+      <div class="masthead">
+        <a href="{{ (sites.ink.path | sitePath) | url }}" class="masthead-link" aria-label="{{ sites.ink.motto }}">
+          <span class="motto-text" data-motto="{{ sites.ink.motto }}"></span>
+        </a>
+      </div>
       <nav class="navigation" aria-label="primary">
         <a href="{{ (sites.ink.path | sitePath) | url }}"{% if current == 'entries' %} aria-current="page"{% endif %}>全部</a>
         <a href="{{ (sites.ink.path | sitePath('?cat=技术分析')) | url }}" data-nav-filter="技术分析">技术分析</a>
