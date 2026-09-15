@@ -8,7 +8,7 @@
   <meta property="og:title" content="{{ title }} — {{ sites.ink.name }}">
   <meta property="og:description" content="{{ description or sites.ink.description }}">
   <meta property="og:type" content="{{ ogType or 'website' }}">
-  <link rel="icon" href="{{ (sites.ink.assetPath | sitePath('favicon.svg')) | url }}" type="image/svg+xml">
+  <link rel="icon" href="{{ (sites.ink.assetPath | sitePath('favicon.svg?v=2')) | url }}" type="image/svg+xml">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
