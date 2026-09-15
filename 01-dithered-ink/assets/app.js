@@ -48,7 +48,6 @@
       mottoEl.textContent = fullText;
       mottoEl.classList.add("is-done");
     } else {
-      mottoEl.classList.add("is-typing");
       let index = 0;
       let typing = true;
 
@@ -58,7 +57,6 @@
           mottoEl.textContent = fullText.slice(0, index);
           if (index >= fullText.length) {
             typing = false;
-            mottoEl.classList.remove("is-typing");
             mottoEl.classList.add("is-done");
             window.setTimeout(tick, 4200);
             return;
@@ -67,12 +65,11 @@
           return;
         }
 
+        mottoEl.classList.remove("is-done");
         index -= 1;
         mottoEl.textContent = fullText.slice(0, index);
         if (index <= 0) {
           typing = true;
-          mottoEl.classList.remove("is-done");
-          mottoEl.classList.add("is-typing");
           window.setTimeout(tick, 900);
           return;
         }

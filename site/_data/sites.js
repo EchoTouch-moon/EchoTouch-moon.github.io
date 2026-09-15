@@ -7,7 +7,6 @@ export default {
     motto: "问苍茫大地，谁主沉浮？",
     handle: "EchoTouch-moon",
     description: "EchoTouch-moon 的个人博客，记录 AI 应用、算法学习与工程实践。",
-    intro: "—— 《沁园春·长沙》",
     copyright: "EchoTouch-moon",
     github: {
       user: "EchoTouch-moon",
