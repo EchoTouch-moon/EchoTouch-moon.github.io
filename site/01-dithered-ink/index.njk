@@ -1,32 +1,15 @@
 ---
 layout: layouts/01-shell.njk
 permalink: index.html
-title: 文章列表
+title: Entries
 current: entries
 ---
-<h1 class="page-title">文章列表</h1>
-
-<div class="category-tabs" role="tablist" aria-label="文章分类栏目">
-  <button type="button" class="tab-btn is-active" data-filter="all" role="tab" aria-selected="true">全部 · All <span class="tab-count">{{ collections.posts.length }}</span></button>
-  <button type="button" class="tab-btn" data-filter="技术分析" role="tab" aria-selected="false">技术分析 <span class="tab-count">{{ (collections.posts | byCategory('技术分析')).length }}</span></button>
-  <button type="button" class="tab-btn" data-filter="日常感悟" role="tab" aria-selected="false">日常感悟 <span class="tab-count">{{ (collections.posts | byCategory('日常感悟')).length }}</span></button>
-</div>
-
-<div class="entry-list" id="entry-list">
+<div class="entry-list">
   {% for post in collections.posts %}
-    <article class="entry" data-category="{{ post.data.category or '未分类' }}">
-      <div class="date-col">
-        <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
-        {% if post.data.category %}
-          <div><span class="category-badge">{{ post.data.category }}</span></div>
-        {% endif %}
-      </div>
-      <div>
-        <h2><a href="{{ post | postUrl(sites.ink.path) | url }}">{{ post.data.title }}</a></h2>
-        <p class="summary">{{ post.data.description }}</p>
-      </div>
+    <article class="entry">
+      <h2><a href="{{ post | postUrl(sites.ink.path) | url }}">{{ post.data.title }}</a></h2>
+      <p class="summary">{{ post.data.lede }}</p>
+      <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
     </article>
   {% endfor %}
 </div>
-
-<p class="backlink"><a href="{{ (sites.ink.path | sitePath('archive.html')) | url }}">查看分类归档 →</a></p>

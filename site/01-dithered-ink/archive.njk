@@ -1,45 +1,20 @@
 ---
 layout: layouts/01-shell.njk
 permalink: archive.html
-title: 归档
-description: EchoTouch 博客全部文章归档，按栏目整理。
+title: Archive
+description: All entries in chronological order.
 current: archive
 ---
-<h1 class="page-title">文章归档</h1>
-<p class="intro">按栏目分类整理，记录技术分析与日常感悟。</p>
+<h1 class="page-title">Archive</h1>
 
-<section class="archive-column">
-  <h2 class="archive-column-title">技术分析 <span class="column-count">({{ (collections.posts | byCategory('技术分析')).length }} 篇)</span></h2>
-  <div class="entry-list">
-    {% for post in collections.posts | byCategory('技术分析') %}
-      <article class="entry">
-        <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
-        <div>
-          <h2><a href="{{ post | postUrl(sites.ink.path) | url }}">{{ post.data.title }}</a></h2>
-          <p class="summary">{{ post.data.description }}</p>
-        </div>
-      </article>
-    {% else %}
-      <p class="empty-hint">暂无技术分析文章</p>
-    {% endfor %}
-  </div>
-</section>
+<div class="entry-list">
+  {% for post in collections.posts %}
+    <article class="entry">
+      <h2><a href="{{ post | postUrl(sites.ink.path) | url }}">{{ post.data.title }}</a></h2>
+      <p class="summary">{{ post.data.lede }}</p>
+      <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
+    </article>
+  {% endfor %}
+</div>
 
-<section class="archive-column">
-  <h2 class="archive-column-title">日常感悟 <span class="column-count">({{ (collections.posts | byCategory('日常感悟')).length }} 篇)</span></h2>
-  <div class="entry-list">
-    {% for post in collections.posts | byCategory('日常感悟') %}
-      <article class="entry">
-        <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
-        <div>
-          <h2><a href="{{ post | postUrl(sites.ink.path) | url }}">{{ post.data.title }}</a></h2>
-          <p class="summary">{{ post.data.description }}</p>
-        </div>
-      </article>
-    {% else %}
-      <p class="empty-hint">暂无日常感悟文章</p>
-    {% endfor %}
-  </div>
-</section>
-
-<p class="backlink"><a href="{{ (sites.ink.path | sitePath) | url }}">← 返回首页</a></p>
+<p class="backlink"><a href="{{ (sites.ink.path | sitePath) | url }}">← back to entries</a></p>

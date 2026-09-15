@@ -13,21 +13,13 @@ eleventyComputed:
 {% set older = collections.posts | olderPost(post) %}
 {% set newer = collections.posts | newerPost(post) %}
 <article itemscope itemtype="https://schema.org/BlogPosting">
-  <p class="post-date" data-date="{{ post.date | htmlDateString }}">
-    {{ post.date | readableDate }}{% if post.data.category %} · <span class="category-badge">{{ post.data.category }}</span>{% endif %}
-  </p>
+  <p class="post-date" data-date="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</p>
   <h1 itemprop="headline">{{ post.data.title }}</h1>
   <p class="lede">{{ post.data.lede | safe }}</p>
 
   <div itemprop="articleBody">
     {{ post.templateContent | safe }}
   </div>
-
-  {% if post.data.tags and post.data.tags.length %}
-    <div class="tags" aria-label="tags">
-      {% for tag in post.data.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
-    </div>
-  {% endif %}
 
   {% if older or newer %}
     <nav class="post-nav" aria-label="More entries">
