@@ -1,0 +1,23 @@
+---
+layout: layouts/02-shell.njk
+permalink: 02-blue-notebook/index.html
+title: Blog
+description: A journal about engineering, tools, and the craft of writing things down.
+current: blog
+---
+<div class="entry-list">
+  {% for post in collections.posts | limit(8) %}
+    <article class="entry-overview">
+      <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
+      <div>
+        <h2><a href="{{ post | postUrl(sites.notebook.path) | url }}">{{ post.data.title }}</a></h2>
+        <p>{{ post.data.description }}</p>
+      </div>
+    </article>
+  {% endfor %}
+</div>
+
+<hr class="soft">
+<p class="archive-callout">Older entries live in the
+  <a href="{{ ('/' ~ sites.notebook.path ~ '/archive.html') | url }}">archive</a>.
+</p>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Afterglow — a blog with weather</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Notes on interfaces, motion, and building things that glow softly.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+
+  <!-- atmosphere: three drifting gradient blobs, pure CSS -->
+  <div class="aurora" aria-hidden="true"><span class="blob"></span></div>
+
+  <header class="topbar shell">
+    <div class="topbar-inner">
+      <a class="logo" href="./"><span class="dot"></span>afterglow</a>
+      <nav class="pillnav" aria-label="primary">
+        <a href="./" aria-current="page">writing</a>
+        <a href="#">projects</a>
+        <a href="#">now</a>
+        <a href="about.html">about</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <section class="hero reveal in">
+      <span class="kicker-chip"><span class="pulse"></span> NEW POST EVERY FEW WEEKS</span>
+      <h1>Notes from the quiet end of the internet<span class="grad-text">.</span></h1>
+      <p class="sub">Essays on interfaces, motion design, and small software
+      that respects your evening. No tracking, no banner ads, no autoplay.</p>
+      <div class="tagrow" aria-label="topics">
+        <button class="chip"># interface</button>
+        <button class="chip"># motion</button>
+        <button class="chip"># css-art</button>
+        <button class="chip"># typography</button>
+        <button class="chip"># tiny-tools</button>
+      </div>
+    </section>
+
+    <p class="section-label">recent writing</p>
+
+    <div class="grid">
+
+      <a class="card reveal" href="post.html">
+        <time datetime="2026-08-18">2026·08·18</time>
+        <h3>Interfaces That Breathe at 60fps and Think at Their Own Pace</h3>
+        <p>Animation is communication. A field guide to easing curves that mean something.</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card reveal" href="post.html">
+        <time datetime="2026-07-05">2026·07·05</time>
+        <h3>The Case for One Big CSS File</h3>
+        <p>Design systems distribute; a single stylesheet concentrates. Both work — pick on purpose.</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card reveal" href="post.html">
+        <time datetime="2026-05-22">2026·05·22</time>
+        <h3>Glassmorphism, Post-Hype</h3>
+        <p>Blur is free until it isn't: measuring backdrop-filter paint costs across GPUs.</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card reveal" href="post.html">
+        <time datetime="2026-04-01">2026·04·01</time>
+        <h3>Aurora in Ninety Lines of CSS</h3>
+        <p>Three radial gradients, three keyframes, one pseudo-element you'll never screenshot twice.</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card reveal" href="post.html">
+        <time datetime="2026-02-14">2026·02·14</time>
+        <h3>Fonts I Loved This Quarter</h3>
+        <p>Sora's numerals, Instrument Sans's stubborn neutrality, and why Space Mono still charms.</p>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card reveal" href="post.html">
+        <time datetime="2025-12-31">2025·12·31</time>
+        <h3>Year Notes: Shipping Small</h3>
+        <p>Forty-one tiny releases beat two big ones. The receipts, with graphs.</p>
+        <span class="arrow">→</span>
+      </a>
+
+    </div>
+  </main>
+
+  <footer class="glasspanel shell" style="margin-inline:auto;">
+    <div>
+      <strong style="color:var(--text)">afterglow</strong><br>
+      hand-rolled html · ~100 lines of js · hosted anywhere static files live
+    </div>
+    <div>
+      syndication &amp; contact<br>
+      <a href="#">rss</a> · <a href="#">mastodon</a> · <a href="mailto:you@example.com">mail</a>
+    </div>
+  </footer>
+
+</body>
+</html>

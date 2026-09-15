@@ -1,0 +1,503 @@
+/* ============================================================
+   Template 01 · Dithered Ink
+   Warm sepia serif blog with an animated dithered canvas banner.
+   Pure CSS, no build step. Light/dark themes via data-theme.
+   ============================================================ */
+
+:root {
+  color-scheme: light dark;
+
+  --bg:          #fbf3e4;
+  --text:        #26190e;
+  --primary:     #8a541c;
+  --secondary:   #a15f20;
+  --header-ink:  #3d2a14;
+  --faded:       #6f6250;
+  --border:      #decba9;
+  --code-bg:     #f3e7cf;
+  --code-block-bg: #fdf7ea;
+  --warn-text:   #8f5600;
+  --warn-bg:     rgba(238, 118, 26, 0.12);
+  --shadow:      rgba(140, 95, 35, 0.18);
+
+  /* color the canvas art is drawn with */
+  --canvas-ink: #2b1d10;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:          #141210;
+  --text:        #eee3cf;
+  --primary:     #dcb27c;
+  --secondary:   #efcf9d;
+  --header-ink:  #efe0c4;
+  --faded:       #b5a68c;
+  --border:      #453f36;
+  --code-bg:     #22201b;
+  --code-block-bg: #1a1815;
+  --warn-text:   #e0aa67;
+  --warn-bg:     rgba(238, 118, 26, 0.16);
+  --shadow:      rgba(0, 0, 0, 0.35);
+
+  --canvas-ink: #e8d9b8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg:          #141210;
+    --text:        #eee3cf;
+    --primary:     #dcb27c;
+    --secondary:   #efcf9d;
+    --header-ink:  #efe0c4;
+    --faded:       #99896f;
+    --border:      #453f36;
+    --code-bg:     #22201b;
+    --code-block-bg: #1a1815;
+    --warn-text:   #e0aa67;
+    --warn-bg:     rgba(238, 118, 26, 0.16);
+    --shadow:      rgba(0, 0, 0, 0.35);
+
+    --canvas-ink: #e8d9b8;
+  }
+}
+
+/* ---------- base ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bg); }
+
+body {
+  margin: 0;
+  /* The page background belongs to html. Keeping body transparent avoids
+     stacking a second full-page color surface under the animated canvas. */
+  background: transparent;
+  color: var(--text);
+  font-family: "EB Garamond", Georgia, "Songti SC", serif;
+  font-size: 1.075rem;
+  line-height: 1.78;
+  transition: color 0.25s ease;
+}
+
+::selection { background: rgba(138, 84, 28, 0.28); }
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--secondary); text-decoration: underline; text-underline-offset: 3px; }
+
+:focus-visible { outline: 2px dashed var(--primary); outline-offset: 3px; border-radius: 2px; }
+
+.container {
+  max-width: 47rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.1rem, 4vw, 1.6rem);
+}
+
+/* ---------- masthead ---------- */
+
+.header-image {
+  /* Keep the 1-bit canvas on an integer CSS-pixel grid. A fluid 30vw
+     height produces fractional sizes (for example 186.296875px), so the
+     browser resamples the dither pattern while scrolling and it shimmers. */
+  height: 200px;
+  overflow: hidden;
+  background: var(--bg);
+  transition: background-color 0.25s ease;
+  contain: strict;
+}
+
+#ink-canvas { display: block; width: 100%; height: 100%; contain: strict; }
+
+.masthead {
+  padding-block: 1.15rem 0.9rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+.masthead a { color: var(--header-ink); }
+.masthead a:hover { color: var(--secondary); text-decoration: none; }
+
+.navigation {
+  display: flex;
+  gap: 1.4rem;
+  padding-block: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.97rem;
+}
+
+/* ---------- entries ---------- */
+
+.page-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.9rem;
+  letter-spacing: -0.01em;
+  margin: 2.4rem 0 0.6rem;
+}
+
+.intro { color: var(--faded); margin-top: 0; font-style: italic; }
+
+.entry-list { margin-top: 1.8rem; }
+
+.entry {
+  display: grid;
+  grid-template-columns: 6.2rem 1fr;
+  gap: 1.1rem;
+  padding-block: 1.05rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.entry time,
+.entry .date-col {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.03em;
+  color: var(--faded);
+  padding-top: 0.48rem;
+  white-space: nowrap;
+}
+
+.entry h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 450;
+  font-size: 1.32rem;
+  line-height: 1.35;
+  margin: 0 0 0.25rem;
+}
+
+.entry h2 a { color: var(--header-ink); }
+.entry h2 a:hover { color: var(--secondary); text-decoration: none; }
+
+.entry .summary { margin: 0; font-size: 0.98rem; color: var(--faded); line-height: 1.6; }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.9rem;
+  margin-top: 2.2rem;
+  color: var(--faded);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.82rem;
+}
+
+.pagination .disabled { opacity: 0.45; }
+
+/* ---------- article ---------- */
+
+article { padding-top: 2.2rem; }
+
+.post-date {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--faded);
+  margin: 0 0 0.4rem;
+}
+
+article h1 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 420;
+  font-size: clamp(1.9rem, 5vw, 2.55rem);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  margin: 0 0 1.6rem;
+}
+
+.age-badge {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.6em;
+  padding: 0.08em 0.55em;
+  border-radius: 3px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--warn-text);
+  background: var(--warn-bg);
+}
+
+.lede { font-size: 1.17em; line-height: 1.65; }
+.lede::first-letter { font-family: "Fraunces", Georgia, serif; }
+
+article h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 1.45rem;
+  margin: 2.4rem 0 0.7rem;
+}
+
+article h3 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 1.13rem;
+  margin: 1.9rem 0 0.5rem;
+}
+
+hr { border: none; border-top: 1px solid var(--border); margin: 2.4rem 0; }
+
+pre, code, tt {
+  font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+
+code, tt { background: var(--code-bg); border-radius: 4px; padding: 0.12em 0.4em; font-size: 0.86em; }
+
+pre {
+  background: var(--code-block-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px var(--shadow);
+  border-radius: 7px;
+  padding: 1.05rem 1.25rem;
+  overflow-x: auto;
+  line-height: 1.6;
+  font-size: 0.85rem;
+}
+
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* tiny hand-rolled syntax palette */
+.tok-kw  { color: #9c4a21; font-style: italic; }
+.tok-str { color: #4f7b3a; }
+.tok-num { color: #8a5ab0; }
+.tok-com { color: var(--faded); font-style: italic; }
+.tok-fn  { color: #2769a3; }
+
+/* Prism classes emitted by the Markdown build. Keep the hand-rolled
+   palette above for the legacy HTML examples. */
+.token.keyword,
+.token.operator { color: #9c4a21; }
+.token.keyword { font-style: italic; }
+.token.string { color: #4f7b3a; }
+.token.number,
+.token.boolean { color: #8a5ab0; }
+.token.comment { color: var(--faded); font-style: italic; }
+.token.function { color: #2769a3; }
+
+blockquote {
+  margin: 1.6rem 0;
+  padding-left: 1.15rem;
+  border-left: 3px solid var(--primary);
+  color: var(--faded);
+  font-style: italic;
+}
+blockquote p { margin: 0.35rem 0; }
+
+table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+}
+th, td { border: 1px solid var(--border); padding: 0.45rem 0.7rem; text-align: left; }
+th { background: var(--code-bg); color: var(--header-ink); }
+
+figure { margin: 1.9rem 0; }
+figure svg, figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--code-block-bg);
+}
+figcaption {
+  text-align: center;
+  font-size: 0.87rem;
+  color: var(--faded);
+  margin-top: 0.55rem;
+}
+
+figure.float-right {
+  float: right;
+  width: 150px;
+  margin: 0.35rem 0 1rem 1.4rem;
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2.2rem; }
+.tag {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.12rem 0.75rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.73rem;
+  color: var(--faded);
+}
+
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.post-nav a[rel="next"] { margin-left: auto; text-align: right; }
+
+.backlink { margin-top: 2.6rem; font-size: 0.9rem; }
+
+/* ---------- footnotes ---------- */
+
+.footnotes { margin-top: 3rem; font-size: 0.93rem; }
+.footnotes-sep { border: none; border-top: 1px dashed var(--border); }
+sup a { font-family: "IBM Plex Mono", monospace; font-size: 0.72em; padding-left: 0.1em; }
+
+/* ---------- about ---------- */
+
+.portrait-row { display: flex; gap: 1.4rem; align-items: flex-start; margin-top: 1.6rem; }
+.monogram {
+  flex: 0 0 auto;
+  width: 108px; height: 108px;
+  border-radius: 50%;
+  border: 1.5px solid var(--primary);
+  display: grid; place-items: center;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 2.6rem;
+  color: var(--header-ink);
+  background: radial-gradient(circle at 32% 28%, rgba(138, 84, 28, 0.18), transparent 65%);
+}
+
+/* ---------- footer ---------- */
+
+footer.site {
+  margin-top: 4rem;
+  border-top: 1px solid var(--border);
+  padding: 1.4rem 0 3.2rem;
+  color: var(--faded);
+  font-size: 0.9rem;
+}
+footer.site p { margin: 0.25rem 0; }
+
+.footer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+}
+.footer-controls__sep {
+  color: var(--border);
+  padding-inline: 0.25rem;
+  user-select: none;
+}
+
+.theme-form { display: inline-flex; gap: 0.45rem; align-items: baseline; flex-wrap: wrap; }
+.theme-form label { cursor: pointer; }
+.theme-form label span:hover { text-decoration: underline; }
+.theme-form input:checked + span { text-decoration: underline; color: var(--text); }
+.theme-form input { accent-color: var(--primary); }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 560px) {
+  .entry { grid-template-columns: 1fr; gap: 0.15rem; }
+  .entry .date-col { padding-top: 0.55rem; }
+  .portrait-row { flex-direction: column; }
+  figure.float-right {
+    float: none;
+    width: min(72vw, 240px);
+    margin: 1.4rem auto;
+  }
+}
+
+
+.header-image {
+  position: relative;
+}
+
+/* ---------- category tabs & columns ---------- */
+
+.category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 1.6rem 0 1.2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--border);
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.22rem 0.85rem;
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 0.95rem;
+  color: var(--faded);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.tab-btn:hover {
+  border-color: var(--primary);
+  color: var(--header-ink);
+}
+
+.tab-btn.is-active {
+  background: var(--code-bg);
+  border-color: var(--primary);
+  color: var(--header-ink);
+  font-weight: 550;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+.tab-count {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  margin-left: 0.25rem;
+  opacity: 0.85;
+}
+
+.category-badge {
+  display: inline-block;
+  margin-top: 0.32rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  padding: 0.06rem 0.42rem;
+  border-radius: 3px;
+  background: var(--code-bg);
+  color: var(--primary);
+  border: 1px solid var(--border);
+}
+
+.archive-column {
+  margin-top: 2.2rem;
+}
+
+.archive-column-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 1.32rem;
+  margin: 0 0 0.8rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1.5px solid var(--primary);
+  color: var(--header-ink);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.column-count {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: normal;
+  color: var(--faded);
+}
+
+.empty-hint {
+  font-style: italic;
+  color: var(--faded);
+  margin-top: 0.8rem;
+}
+
+
+
+

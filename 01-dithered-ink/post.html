@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>The Archive That Dreams — Ink &amp; Marginalia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ordered dithering, one-bit art, and why constraint machines feel alive.">
+  <meta property="og:title" content="The Archive That Dreams — Ink & Marginalia">
+  <meta property="og:description" content="Ordered dithering, one-bit art, and why constraint machines feel alive.">
+  <meta property="og:type" content="article">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=EB+Garamond:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="speculationrules">
+    { "prefetch": [ { "where": { "href_matches": "/*" }, "eagerness": "moderate" } ] }
+  </script>
+
+  <link rel="stylesheet" href="assets/style.css?v=12">
+      <script src="assets/app.js" defer></script>
+  <script src="assets/scene-rain.js?v=15" defer></script>
+  <script src="assets/scene-willow.js?v=20" defer></script>
+  <script src="assets/scene-waves.js?v=2" defer></script>
+  <script src="assets/scene-clouds.js?v=35" defer></script>
+  <script src="assets/scene-scroll.js?v=1" defer></script>
+  <script src="assets/dither.js?v=26" defer></script>
+</head>
+<body>
+
+  <div class="header-image">
+    <canvas id="ink-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="masthead"><a href="./">Ink&nbsp;&amp;&nbsp;Marginalia</a></div>
+      <nav class="navigation" aria-label="primary">
+        <a href="./">entries</a>
+        <a href="about.html">about</a>
+        <a href="archive.html">archive</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- data-date feeds the "N years old" badge when older than a year -->
+      <article itemscope itemtype="https://schema.org/BlogPosting">
+        <p class="post-date" data-date="2024-11-03">Nov 03, 2024</p>
+        <h1 itemprop="headline">The Archive That Dreams</h1>
+
+        <p class="lede">There is a particular magic in pictures made of two colors.
+        One bit per pixel forces the machine to <em>invent</em> texture where reality
+        only offered light — and the oldest trick it knows is to borrow order from
+        a small square matrix.</p>
+
+        <h2>Thresholds everywhere</h2>
+
+        <p>Every display is a liar with limits: it cannot show gray between black and
+        white unless it spends levels of brightness. Ordered dithering spends
+        <em>space</em> instead, letting an 8×8 checkerboard of thresholds trade
+        resolution for tone.<sup id="fnref1"><a href="#fn1">1</a></sup> The eye does the rest,
+        averaging the noise into gradients that were never rendered.</p>
+
+        <pre><code><span class="tok-kw">def</span> <span class="tok-fn">dither</span>(image):
+    <span class="tok-com"># an 8x8 Bayer matrix turns tone into position</span>
+    bayer = [[(x ^ y) &amp; 7 <span class="tok-kw">for</span> x <span class="tok-kw">in</span> range(8)] <span class="tok-kw">for</span> y <span class="tok-kw">in</span> range(8)]
+    out = image.copy()
+    <span class="tok-kw">for</span> y <span class="tok-kw">in</span> range(image.height):
+        <span class="tok-kw">for</span> x <span class="tok-kw">in</span> range(image.width):
+            level = image[x, y] / <span class="tok-num">255.0</span>
+            threshold = (bayer[y % 8][x % 8] + <span class="tok-num">0.5</span>) / <span class="tok-num">64.0</span>
+            out[x, y] = <span class="tok-str">&quot;ink&quot;</span> <span class="tok-kw">if</span> level &gt; threshold <span class="tok-kw">else</span> <span class="tok-str">&quot;paper&quot;</span>
+    <span class="tok-kw">return</span> out</code></pre>
+
+        <p>The banner above this page runs the same idea live<sup id="fnref2"><a href="#fn2">2</a></sup>:
+        rain falls onto a quiet water surface while an ordered matrix decides
+        which ink dots survive.</p>
+
+        <blockquote>
+          <p>Constraint is not the enemy of beauty; unexamined abundance is.</p>
+        </blockquote>
+
+        <h3>A field recording</h3>
+
+        <figure>
+          <svg viewBox="0 0 640 300" role="img" aria-label="Dithered dune illustration placeholder">
+            <defs>
+              <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse">
+                <rect width="6" height="6" fill="#fdf7ea"/>
+                <circle cx="2" cy="2" r="1.35" fill="#8a541c"/>
+              </pattern>
+            </defs>
+            <rect width="640" height="300" fill="url(#dots)"/>
+            <path d="M0 190 Q110 150 230 185 T470 175 T640 195 V300 H0 Z" fill="#26190e" opacity=".85"/>
+            <path d="M0 235 Q160 200 320 232 T640 225 V300 H0 Z" fill="#8a541c" opacity=".9"/>
+            <circle cx="452" cy="86" r="34" fill="none" stroke="#26190e" stroke-width="3"/>
+          </svg>
+          <figcaption>Dunes, remade from six-pixel cells (placeholder SVG — swap in your own figure).</figcaption>
+        </figure>
+
+        <h2>Why static pages suit this</h2>
+
+        <ul>
+          <li>No framework means the source <em>is</em> the archive — readable in fifty years by anyone with a browser.</li>
+          <li>CSS custom properties carry the whole mood; theming is one attribute flip.</li>
+          <li>A single <code>&lt;canvas&gt;</code> is enough atmosphere. Anything more is decoration for its own sake.</li>
+        </ul>
+
+        <section class="footnotes">
+          <hr class="footnotes-sep">
+          <ol>
+            <li id="fn1">Lawrence Bayer probably did not imagine his matrices arranging sunsets. <a href="#fnref1" aria-label="back to text">↩</a></li>
+            <li id="fn2">Try appending <code>?rain=storm</code> to this page's URL for the heaviest rain. <a href="#fnref2" aria-label="back to text">↩</a></li>
+          </ol>
+        </section>
+
+        <div class="tags">
+          <span class="tag">dithering</span>
+          <span class="tag">generative-art</span>
+          <span class="tag">static-web</span>
+        </div>
+
+      </article>
+
+      <p class="backlink"><a href="./">← back to entries</a></p>
+    </main>
+
+    <footer class="site">
+      <p>&copy; 2026 Ink &amp; Marginalia. Written in plain HTML.</p>
+      <p><a href="archive.html">Archive</a> · <a href="about.html">About this site</a></p>
+      <p class="footer-controls">
+        <span>Color scheme:</span>
+        <span id="theme-form" class="theme-form">
+          <label><input type="radio" name="theme" value="system"> <span>auto</span></label>,
+          <label><input type="radio" name="theme" value="light"> <span>light</span></label>,
+          <label><input type="radio" name="theme" value="dark"> <span>dark</span></label>.
+        </span>
+        <span class="footer-controls__sep">·</span>
+                        <span>Banner scene:</span>
+        <span id="scene-form" class="theme-form">
+          <label><input type="radio" name="scene" value="auto" checked> <span>auto</span></label>,
+          <label><input type="radio" name="scene" value="scroll"> <span>scroll</span></label>,
+          <label><input type="radio" name="scene" value="waves"> <span>waves</span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>.
+        </span></label>,
+          <label><input type="radio" name="scene" value="waves"> <span>waves</span></label>,
+          <label><input type="radio" name="scene" value="scroll" checked> <span>scroll</span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>.
+        </span></label>,
+          <label><input type="radio" name="scene" value="waves"> <span>waves</span></label>,
+          <label><input type="radio" name="scene" value="scroll" checked> <span>scroll</span></label>,
+          <label><input type="radio" name="scene" value="bamboo"> <span>bamboo</span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>.
+        </span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>.
+        </span>
+      </p>
+    </footer>
+  </div>
+
+</body>
+</html>

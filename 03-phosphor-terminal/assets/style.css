@@ -1,0 +1,323 @@
+/* ============================================================
+   Template 03 · Phosphor Terminal
+   An all-monospace CRT zine. Green phosphor by default,
+   amber via data-theme="amber". Scanlines are pure CSS.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+
+  --bg:        #070c09;
+  --panel:     #0b110d;
+  --text:      #8fe6ab;
+  --bright:    #4dff92;
+  --dim:       #4e8a66;
+  --dimmer:    #33573f;
+  --border:    #1d3527;
+  --hl-bg:     rgba(77, 255, 146, 0.09);
+  --warn:      #ffd166;
+}
+
+[data-theme="amber"] {
+  color-scheme: dark;
+
+  --bg:        #0d0905;
+  --panel:     #140e07;
+  --text:      #e8b96f;
+  --bright:    #ffcf66;
+  --dim:       #9c7a42;
+  --dimmer:    #5d472a;
+  --border:    #33240f;
+  --hl-bg:     rgba(255, 207, 102, 0.10);
+  --warn:      #9be27a;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bg); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Spline Sans Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.97rem;
+  line-height: 1.78;
+}
+
+/* CRT furniture: scanlines + vignette, sitting above everything */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99;
+  background:
+    repeating-linear-gradient(to bottom,
+      transparent 0px, transparent 2px,
+      rgba(0, 0, 0, 0.16) 3px),
+    radial-gradient(ellipse at center,
+      transparent 58%, rgba(0, 0, 0, 0.38) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
+
+::selection { background: var(--bright); color: var(--bg); }
+
+:focus-visible { outline: 1px dashed var(--bright); outline-offset: 3px; }
+
+.wrap {
+  max-width: 56rem;
+  margin-inline: auto;
+  padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 4vw, 1.6rem) 4.5rem;
+}
+
+.glow { text-shadow: 0 0 8px currentColor; opacity: 0.85; }
+a { color: var(--bright); text-decoration: none; }
+a:hover { background: var(--hl-bg); text-decoration: underline; text-underline-offset: 3px; }
+
+kbd.hint {
+  font-family: inherit;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 0.45em;
+  color: var(--dim);
+}
+
+/* ---------- top bar ---------- */
+
+.topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: var(--dim);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+.topline .key { color: var(--dimmer); }
+
+.prompt-line { margin-top: 1.6rem; font-size: clamp(1.25rem, 3.6vw, 1.8rem); }
+.prompt-line .path { color: var(--dim); }
+.cursor {
+  display: inline-block;
+  width: 0.55em; height: 1.05em;
+  vertical-align: text-bottom;
+  background: var(--bright);
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+nav.commands {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  margin-top: 1.1rem;
+  padding-block: 0.65rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+nav.commands .cmd { color: var(--dim); }
+
+/* ---------- listings ---------- */
+
+h2.listing-label {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: var(--dim);
+  margin: 2.2rem 0 0.7rem;
+}
+h2.listing-label b { color: var(--bright); font-weight: 500; }
+
+.dirlist { border-top: 1px solid var(--border); }
+
+.row {
+  display: grid;
+  grid-template-columns: 3.1rem 1fr max-content;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+.row:hover, .row.focused { background: var(--hl-bg); }
+.row .perm { color: var(--dimmer); font-size: 0.82rem; white-space: nowrap; }
+.row .name a { color: var(--text); }
+.row .name a:hover { color: var(--bright); background: transparent; }
+.row .meta { color: var(--dim); font-size: 0.8rem; text-align: right; white-space: nowrap; }
+.row.is-active .name a { color: var(--bright); }
+
+/* vim-style cursor marker: a bright ">" appears before the name of
+   the hovered / j-k focused row */
+@media (hover: hover) {
+  .row .name::before {
+    content: "> ";
+    color: var(--bright);
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+  .row:hover .name::before, .row.focused .name::before { opacity: 1; }
+}
+.row.focused .name::before { opacity: 1; }   /* keep keyboard state */
+
+.comment { color: var(--dim); font-style: italic; margin: 1.2rem 0 0; font-size: 0.88rem; }
+.comment::before { content: "# "; color: var(--dimmer); font-style: normal; }
+
+/* ---------- article ---------- */
+
+article { padding-top: 2.6rem; max-width: 46rem; }
+
+.filehead { color: var(--dim); font-size: 0.82rem; margin-bottom: 0.6rem; }
+
+article h1 {
+  font-family: "VT323", ui-monospace, monospace;
+  font-weight: 400;
+  font-size: clamp(2rem, 6vw, 2.9rem);
+  line-height: 1.15;
+  color: var(--bright);
+  margin: 0 0 1.4rem;
+}
+article h1 .cursor { height: 0.85em; }
+
+h2.sect { font-weight: 500; color: var(--bright); font-size: 1.05rem; margin: 2.1rem 0 0.6rem; }
+h2.sect::before { content: ":: "; color: var(--dimmer); }
+
+p.lede { color: var(--text); font-size: 1.04rem; border-left: 2px solid var(--dim); padding-left: 0.9rem; }
+
+code, tt {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.08em 0.4em;
+  font-size: 0.88em;
+  color: var(--bright);
+}
+
+pre {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.62;
+}
+pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+
+.termblock { margin: 1.5rem 0; }
+.termblock .line-input { color: var(--bright); }
+.termblock .line-input::before { content: "$ "; color: var(--dimmer); }
+.termblock .line-out { color: var(--dim); }
+
+blockquote {
+  margin: 1.6rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--warn);
+  color: var(--text);
+}
+blockquote p { margin: 0.3rem 0; }
+
+ul.plain { list-style: none; padding-left: 0; }
+ul.plain li { margin: 0.32rem 0; }
+ul.plain li::before { content: "+ "; color: var(--dim); }
+
+hr.divider { border: none; border-top: 1px dashed var(--border); margin: 2.4rem 0; }
+
+footer.postfoot {
+  margin-top: 2.8rem;
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  color: var(--dim);
+  font-size: 0.85rem;
+}
+
+/* ---------- status bar ---------- */
+
+.statusbar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  padding: 0.3rem 1rem;
+  font-size: 0.76rem;
+  color: var(--dim);
+}
+.statusbar .seg-bright { color: var(--bright); }
+
+.theme-form label { cursor: pointer; }
+.theme-form input:checked + span { color: var(--bright); }
+.theme-form input { accent-color: var(--bright); }
+
+/* ---------- floating controls ---------- */
+
+.to-top {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 2.6rem;
+  z-index: 100;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--dim);
+  font: inherit;
+  padding: 0.25rem 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(150%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.to-top.visible { opacity: 1; transform: translateY(0); }
+@media (hover: hover) {
+  .to-top:hover { color: var(--bright); background: var(--hl-bg); }
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--dim);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.copy-btn.done { color: var(--bright); }
+.copy-btn:focus-visible { opacity: 1; }
+@media (hover: hover) {
+  pre:hover .copy-btn, .copy-btn:hover { opacity: 1; color: var(--bright); }
+}
+@media (hover: none) {
+  .copy-btn { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .to-top, .copy-btn { transition: none; }
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .row { grid-template-columns: 1fr; gap: 0.1rem; }
+  .row .perm { display: none; }
+  .row .meta { text-align: left; }
+}

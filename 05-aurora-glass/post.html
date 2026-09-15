@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Aurora in Ninety Lines of CSS — Afterglow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Three radial gradients, three keyframes, one pseudo-element.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+
+  <div class="aurora" aria-hidden="true"><span class="blob"></span></div>
+
+  <!-- gradient reading-progress bar -->
+  <div class="reading-progress" aria-hidden="true"></div>
+
+  <header class="topbar shell">
+    <div class="topbar-inner">
+      <a class="logo" href="./"><span class="dot"></span>afterglow</a>
+      <nav class="pillnav" aria-label="primary">
+        <a href="./">writing</a>
+        <a href="#">projects</a>
+        <a href="#">now</a>
+        <a href="about.html">about</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <article class="prose reveal in">
+      <div class="prose-meta">
+        <time datetime="2026-04-01" style="color:var(--faint)">Apr 01, 2026</time>
+        <span class="chip"># css-art</span>
+        <span class="chip" id="read-time">— min read</span>
+      </div>
+
+      <h1 class="post-title">Aurora in Ninety Lines of CSS<span class="grad-text">.</span></h1>
+
+      <p class="lede">The sky above this page is not a video, not a canvas,
+      and not a single image. It is three radial gradients on loan from a
+      sunset, drifting on independent clocks until they almost — but never
+      quite — repeat.</p>
+
+      <h2>The recipe</h2>
+
+      <p>Each "blob" is a fixed-position pseudo-element with an enormous
+      blur radius and its own animation duration. Desynchronizing the
+      durations (26s / 32s / 38s) is what keeps the composition alive:
+      the full pattern cycles only at their least common multiple, which is
+      to say never within a sitting.</p>
+
+      <pre><code><span class="tok-com">/* one blob, essence of */</span>
+<span class="tok-kw">.aurora::before</span> {
+  width: 46vw; height: 46vw;
+  background: radial-gradient(circle,
+    rgba(94, 234, 212, .5), transparent 65%);
+  filter: blur(90px);
+  animation: drift-a 26s ease-in-out infinite alternate;
+}
+<span class="tok-kw">@keyframes</span> drift-a {
+  <span class="tok-kw">to</span> { transform: translate(14vw, 10vh) scale(1.15); }
+}</code></pre>
+
+      <blockquote>
+        <p>Atmosphere should be noticed once, then forgotten — like good
+        room temperature. If users mention your background in every message,
+        it has become a roommate.</p>
+      </blockquote>
+
+      <h2>Costs &amp; courtesies</h2>
+
+      <p>Blur is the expensive part: <code>filter: blur(90px)</code> runs per
+      frame while animating. Two mitigations ship with this template:</p>
+
+      <ul>
+        <li>Blobs animate <code>transform</code> only — compositable, GPU-friendly.</li>
+        <li><code>@media (prefers-reduced-motion: reduce)</code> freezes every
+            drift without losing the color field itself.</li>
+      </ul>
+
+      <figure>
+        <svg viewBox="0 0 640 320" role="img" aria-label="Gradient blob diagram">
+          <rect width="640" height="320" rx="16" fill="#07080f"/>
+          <circle cx="170" cy="120" r="110" fill="#5eead4" opacity=".45"/>
+          <circle cx="430" cy="140" r="100" fill="#7dd3fc" opacity=".4"/>
+          <circle cx="300" cy="250" r="90" fill="#fdba74" opacity=".35"/>
+          <text x="320" y="36" text-anchor="middle" fill="#98a0b3"
+                font-family="monospace" font-size="15">three circles · three clocks · ninety lines</text>
+        </svg>
+        <figcaption>The whole weather system, caught mid-drift (placeholder figure).</figcaption>
+      </figure>
+
+      <h2>Steal this</h2>
+
+      <p>Open <code>assets/style.css</code>, find the aurora section, paste it
+      into any dark theme. Change the three rgba stops and you have a new
+      latitude. The glass cards are separately portable — <code>backdrop-filter:
+      blur(18px) saturate(150%)</code> does most of the talking.</p>
+
+      <nav class="endnav" aria-label="post navigation">
+        <a href="./">&larr; all writing</a>
+        <a href="#">next post →</a>
+      </nav>
+    </article>
+  </main>
+
+  <button id="to-top" class="to-top" type="button" aria-label="Back to top">&uarr;</button>
+
+  <footer class="glasspanel shell" style="margin-inline:auto;">
+    <div>
+      <strong style="color:var(--text)">afterglow</strong><br>
+      hand-rolled html · ~100 lines of js · hosted anywhere static files live
+    </div>
+    <div>
+      syndication &amp; contact<br>
+      <a href="#">rss</a> · <a href="#">mastodon</a> · <a href="mailto:you@example.com">mail</a>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>About — Afterglow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+
+  <div class="aurora" aria-hidden="true"><span class="blob"></span></div>
+
+  <header class="topbar shell">
+    <div class="topbar-inner">
+      <a class="logo" href="./"><span class="dot"></span>afterglow</a>
+      <nav class="pillnav" aria-label="primary">
+        <a href="./">writing</a>
+        <a href="#">projects</a>
+        <a href="#">now</a>
+        <a href="about.html" aria-current="page">about</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <article class="prose reveal in">
+      <div class="prose-meta">
+        <span class="chip"># colophon</span>
+      </div>
+      <h1 class="post-title">About<span class="grad-text">.</span></h1>
+
+      <p class="lede">I make small, glowing things for the web and write down
+      how they work before the details fade. This site is both notebook
+      and showcase.</p>
+
+      <h2>The build</h2>
+      <ul>
+        <li><strong>Weather:</strong> three drifting gradient blobs in pure CSS,
+            frozen automatically under reduced-motion preferences.</li>
+        <li><strong>Cards:</strong> backdrop-blur glass panels; hover lift is a
+            transform, never a layout reflow.</li>
+        <li><strong>Reading progress:</strong> one fixed div, one gradient, one
+            scroll listener that stays passive.</li>
+        <li><strong>Reveals:</strong> IntersectionObserver adds a single
+            <code>.in</code> class; cascade delays live in CSS variables.</li>
+        <li><strong>Type:</strong> Sora for display, Instrument Sans for body,
+            Space Mono for timestamps and code.</li>
+      </ul>
+
+      <h2>Hosting it</h2>
+      <p>Drop the folder on GitHub Pages / Netlify / Cloudflare Pages — or
+      serve it from anything with an HTTP daemon. There is no build step:
+      edit HTML, refresh, publish.</p>
+
+      <h2>Elsewhere</h2>
+      <p><a href="mailto:you@example.com">mail</a> ·
+         <a href="#">mastodon</a> ·
+         <a href="#">github</a> ·
+         <a href="#">rss</a></p>
+
+      <nav class="endnav" aria-label="back">
+        <a href="./">&larr; all writing</a>
+      </nav>
+    </article>
+  </main>
+
+  <button id="to-top" class="to-top" type="button" aria-label="Back to top">&uarr;</button>
+
+  <footer class="glasspanel shell" style="margin-inline:auto;">
+    <div>
+      <strong style="color:var(--text)">afterglow</strong><br>
+      hand-rolled html · ~100 lines of js · hosted anywhere static files live
+    </div>
+    <div>
+      syndication &amp; contact<br>
+      <a href="#">rss</a> · <a href="#">mastodon</a> · <a href="mailto:you@example.com">mail</a>
+    </div>
+  </footer>
+
+</body>
+</html>

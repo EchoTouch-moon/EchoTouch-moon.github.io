@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>whoami — ~/nocturne</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
+
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topline">
+    <span><a href="./">&larr; back</a></span>
+    <span class="theme-form" id="theme-form">
+      tube:
+      <label><input type="radio" name="theme" value="phosphor"> <span>P1&nbsp;green</span></label>
+      <label><input type="radio" name="theme" value="amber"> <span>P3&nbsp;amber</span></label>
+    </span>
+  </div>
+
+  <main>
+    <article>
+      <p class="filehead">~/nocturne/README · last build: Aug 2026</p>
+
+      <h1>whoami<span class="cursor"></span></h1>
+
+      <p class="lede">A terminal-flavored journal about calm software,
+      small machines, and text files that age well.</p>
+
+      <div class="termblock">
+<pre><code><span class="line-input">finger vesper</span><span class="line-out">Login: vesper              Name: Vesper Nocturne</span><span class="line-out">Shell: /bin/zsh            Plan: write, tinker, repeat.</span><span class="line-out">Status: offline by preference</span></code></pre>
+      </div>
+
+      <h2 class="sect">how this zine works</h2>
+
+      <ul class="plain">
+        <li>Hand-written HTML. The listing on the index is a real grid, not an image.</li>
+        <li>Press <kbd class="hint">j</kbd>/<kbd class="hint">k</kbd> anywhere to move between entries;
+            <kbd class="hint">/</kbd> jumps to search.</li>
+        <li>Scanlines and vignette are one fixed-position pseudo-element — zero images.</li>
+        <li>Themes swap the whole tube: P1 green or P3 amber, stored locally.</li>
+      </ul>
+
+      <h2 class="sect">reach me</h2>
+
+      <div class="termblock">
+<pre><code><span class="line-input">mailto vesper@example.org</span><span class="line-input">curl -s https://example.org/vesper.pgp | gpg --import</span></code></pre>
+      </div>
+    </article>
+  </main>
+
+</div>
+
+<button id="to-top" class="to-top" type="button">[↥ cd ..]</button>
+
+<footer class="statusbar">
+  <span><span class="seg-bright">NORMAL</span> ~/nocturne/README</span>
+  <span><span class="seg-bright" id="scroll-pct">Top</span> · utf-8</span>
+</footer>
+
+</body>
+</html>

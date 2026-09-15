@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>About — The Blue Notebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..600;1,400&family=Merriweather:wght@700&family=Ubuntu+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css">
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("notebook-theme");
+        if (t === "dark" || t === "light") {
+          document.documentElement.setAttribute("data-theme", t);
+        }
+      } catch (e) { /* private mode */ }
+      document.documentElement.setAttribute("data-initial-load", "true");
+    })();
+  </script>
+
+  <script type="speculationrules">
+    { "prefetch": [ { "where": { "href_matches": "/*" }, "eagerness": "moderate" } ] }
+  </script>
+
+  <script src="assets/app.js" defer></script>
+  <script src="assets/tide.js" defer></script>
+</head>
+<body>
+
+  <div class="band band-top" aria-hidden="true">
+    <canvas class="tide-canvas" data-flip="false"></canvas>
+  </div>
+
+<div class="container">
+
+  <header class="masthead">
+    <span class="avatar-ring"><span class="monogram">bn.</span></span>
+    <a href="./">The Blue Notebook</a>
+  </header>
+
+  <nav class="navigation" aria-label="primary">
+    <a href="./">blog</a>
+    <a href="#">archive</a>
+    <a href="./#projects-anchor">projects</a>
+    <a href="about.html">about</a>
+  </nav>
+
+  <main>
+    <article style="padding-top:2.2rem;">
+      <h1>About this notebook</h1>
+
+      <p class="lede">I keep this page the way one keeps a lab notebook:
+      dated, cross-referenced, and honest about what failed.</p>
+
+      <h2>What lives here</h2>
+      <p>Long-form notes on systems programming, typography, and small tools.
+      Short discoveries go straight into dated entries; anything that survives
+      three rereads gets promoted to an essay.</p>
+
+      <h2>Colophon</h2>
+      <ul>
+        <li><strong>Type:</strong> Lora for body, Merriweather for titles,
+            Ubuntu Mono for code — self-host or inline via Google Fonts.</li>
+        <li><strong>The tide:</strong> the header and footer bands run
+            <a href="https://lucumr.pocoo.org/">lucumr.pocoo.org</a>'s WebGL
+            water shader directly (by Armin Ronacher,
+            <a href="https://github.com/mitsuhiko/lucumr">source</a>) —
+            a crisp, full-bleed metaball sea. Hover a band and red
+            accents surface one by one over ~2.65 seconds, then sink
+            back. The footer is a 450px ocean, exactly like the
+            original; only the page-blend and accent colors were
+            adapted to this site's palette.</li>
+        <li><strong>CSS trick:</strong> every color is written once with
+            <code>light-dark()</code>; flipping <code>color-scheme</code>
+            themes the whole site, and all colors cross-fade over 300&nbsp;ms
+            (suppressed on first paint, the lucumr way).</li>
+        <li><strong>Little souls:</strong> page-to-page cross-fades via the
+            View Transitions API, hover-reveal heading anchors, footnote
+            pairing, code copy buttons, ink-thickening underlines, gap-sliding
+            entry rows, a footer clock, and speculative prefetch. All vanilla,
+            all respectful of reduced-motion.</li>
+        <li><strong>Inspiration:</strong> lucumr.pocoo.org, manuelmoreale.com,
+            paco.me, joshwcomeau.com, and the wider hand-made-web tradition.</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <ul>
+        <li><a href="mailto:you@example.com">you@example.com</a></li>
+        <li><a href="https://github.com/you">github</a> · <a href="https://mastodon.social">mastodon</a></li>
+      </ul>
+    </article>
+  </main>
+
+  <footer class="site">
+    <p>&copy; 2026 The Blue Notebook · content licensed CC&nbsp;BY-NC&nbsp;4.0</p>
+    <p>your local time: <span id="local-time">—</span> · <span id="greeting"></span>
+       <noscript>· greetings, wherever and whenever you are</noscript></p>
+    <p>
+      Color scheme:
+      <span id="theme-form" class="theme-form">
+        <label><input type="radio" name="theme" value="system"> <span>auto</span></label>,
+        <label><input type="radio" name="theme" value="light"> <span>light</span></label>,
+        <label><input type="radio" name="theme" value="dark"> <span>dark</span></label>.
+      </span>
+    </p>
+  </footer>
+
+</div>
+
+  <div class="band band-bottom" aria-hidden="true">
+    <canvas class="tide-canvas" data-flip="true"></canvas>
+  </div>
+
+</body>
+</html>

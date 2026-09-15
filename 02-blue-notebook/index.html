@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>The Blue Notebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A journal about engineering, tools, and the craft of writing things down.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..600;1,400&family=Merriweather:wght@700&family=Ubuntu+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css">
+
+  <!-- theme before first paint: no flash, and data-initial-load
+       keeps the 300ms cross-fade asleep until the page settles -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("notebook-theme");
+        if (t === "dark" || t === "light") {
+          document.documentElement.setAttribute("data-theme", t);
+        }
+      } catch (e) { /* private mode */ }
+      document.documentElement.setAttribute("data-initial-load", "true");
+    })();
+  </script>
+
+  <!-- speculative prefetch: next pages load while you read -->
+  <script type="speculationrules">
+    { "prefetch": [ { "where": { "href_matches": "/*" }, "eagerness": "moderate" } ] }
+  </script>
+
+  <script src="assets/app.js" defer></script>
+  <script src="assets/tide.js" defer></script>
+</head>
+<body>
+
+  <!-- the living ink-tide: hover it and red accents surface one by one -->
+  <div class="band band-top" aria-hidden="true">
+    <canvas class="tide-canvas" data-flip="false"></canvas>
+  </div>
+
+<div class="container">
+
+  <header class="masthead">
+    <span class="avatar-ring"><span class="monogram">bn.</span></span>
+    <a href="./">The Blue Notebook</a>
+  </header>
+
+  <nav class="navigation" aria-label="primary">
+    <a href="./">blog</a>
+    <a href="#">archive</a>
+    <a href="#projects-anchor">projects</a>
+    <a href="about.html">about</a>
+  </nav>
+
+  <main>
+    <div class="entry-list">
+
+      <article class="entry-overview">
+        <time datetime="2026-08-09">Aug 09, 2026</time>
+        <div>
+          <h2><a href="post.html">Everything I Re-learned by Writing a Tiny HTTP Server</a></h2>
+          <p>Sockets, buffering, and why half of web complexity is really queueing theory.</p>
+        </div>
+      </article>
+
+      <article class="entry-overview">
+        <time datetime="2026-06-27">Jun 27, 2026</time>
+        <div>
+          <h2><a href="post.html">Journals, Logs, and the Difference Between Them</a></h2>
+          <p>A journal is written for yourself tomorrow; a log is written for strangers in three years.</p>
+        </div>
+      </article>
+
+      <article class="entry-overview">
+        <time datetime="2026-05-12">May 12, 2026</time>
+        <div>
+          <h2><a href="post.html">The Case for Boring Typography</a></h2>
+          <p>What two thousand years of book design knew before the browser arrived.</p>
+        </div>
+      </article>
+
+      <article class="entry-overview">
+        <time datetime="2026-03-30">Mar 30, 2026</time>
+        <div>
+          <h2><a href="post.html">Debugging at the Library</a></h2>
+          <p>Notes from a week of working offline: paper, patience, and print statements.</p>
+        </div>
+      </article>
+
+      <article class="entry-overview">
+        <time datetime="2026-02-14">Feb 14, 2026</time>
+        <div>
+          <h2><a href="post.html">A field guide to RSS reincarnation</a></h2>
+          <p>Feeds never died; they just went quiet and started wearing cardigans.</p>
+        </div>
+      </article>
+
+      <article class="entry-overview">
+        <time datetime="2025-11-19">Nov 19, 2025</time>
+        <div>
+          <h2><a href="post.html">On hosting your own small web</a></h2>
+          <p>A $4 VPS, a 40-line build script, and a domain that outlives platforms.</p>
+        </div>
+      </article>
+
+      <article class="entry-overview">
+        <time datetime="2025-09-02">Sep 02, 2025</time>
+        <div>
+          <h2><a href="post.html">Twenty prompts I keep pinned</a></h2>
+          <p>The shortest useful list I know for working with assistants day to day.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <hr class="soft" id="projects-anchor">
+    <p style="color:var(--faded); font-size:.92rem;">Older entries live in the
+      <a href="#">archive</a>. Feeds: <a href="#">atom</a> · <a href="#">rss</a>.</p>
+  </main>
+
+  <footer class="site">
+    <p>&copy; 2026 The Blue Notebook · content licensed CC&nbsp;BY-NC&nbsp;4.0</p>
+    <p>your local time: <span id="local-time">—</span> · <span id="greeting"></span>
+       <noscript>· greetings, wherever and whenever you are</noscript></p>
+    <p>
+      Color scheme:
+      <span id="theme-form" class="theme-form">
+        <label><input type="radio" name="theme" value="system"> <span>auto</span></label>,
+        <label><input type="radio" name="theme" value="light"> <span>light</span></label>,
+        <label><input type="radio" name="theme" value="dark"> <span>dark</span></label>.
+      </span>
+    </p>
+  </footer>
+
+</div>
+
+  <div class="band band-bottom" aria-hidden="true">
+    <canvas class="tide-canvas" data-flip="true"></canvas>
+  </div>
+
+</body>
+</html>

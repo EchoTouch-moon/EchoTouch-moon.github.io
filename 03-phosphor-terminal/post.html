@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>calm software is a choice — ~/nocturne</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Notifications are a design decision. So is silence.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
+
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topline">
+    <span><kbd class="hint">esc</kbd> back to listing: <a href="./">..</a></span>
+    <span class="theme-form" id="theme-form">
+      tube:
+      <label><input type="radio" name="theme" value="phosphor"> <span>P1&nbsp;green</span></label>
+      <label><input type="radio" name="theme" value="amber"> <span>P3&nbsp;amber</span></label>
+    </span>
+  </div>
+
+  <main>
+    <article>
+      <p class="filehead">~/entries/2026-08-12--calm-software-is-a-choice.md ·
+         modified Aug 12, 2026</p>
+
+      <h1>calm software is a choice<span class="cursor"></span></h1>
+
+      <p class="lede">Every app wants to be urgent. Mine chose not to be.
+      This is the anatomy of an interface that has nothing to sell.</p>
+
+      <h2 class="sect">the argument, briefly</h2>
+
+      <p>Urgency is easy: red badges, infinite feeds, machines that count
+      things while you sleep. Calm requires saying <em>no</em> to each of those,
+      one honest diff at a time. The terminal idiom helps — it was born in rooms
+      where the loudest thing was the fan.</p>
+
+      <div class="termblock">
+<pre><code><span class="line-input">grep -c "notification" ./index.html</span><span class="line-out">0</span><span class="line-input">wc -l assets/*.js assets/*.css</span><span class="line-out"> 212 assets/app.js</span><span class="line-out"> 318 assets/style.css</span></code></pre>
+      </div>
+
+      <h2 class="sect">three rules i keep on the wall</h2>
+
+      <ul class="plain">
+        <li>The page must finish rendering before you notice it started.</li>
+        <li>No element may demand attention twice for the same fact.</li>
+        <li>Silence is the default state; sound is opt-in and rare.</li>
+      </ul>
+
+      <blockquote>
+        <p>"The best interface is a window, and the weather outside is none of
+        your business."</p>
+      </blockquote>
+
+      <h2 class="sect">what calm costs</h2>
+
+      <p>Growth, mostly. A quiet tool spreads by whisper, which is fine if you
+      measure success in <code>uptime × reader_trust</code> instead of
+      daily actives. Try this page at night with the tube set to amber —
+      nothing will pulse, ping, or reposition itself.</p>
+
+      <hr class="divider">
+
+      <footer class="postfoot">
+        <a href="./">&larr; cd ..</a>
+        <a href="#">next entry &rarr;</a>
+      </footer>
+    </article>
+  </main>
+
+</div>
+
+<button id="to-top" class="to-top" type="button">[↥ cd ..]</button>
+
+<footer class="statusbar">
+  <span><span class="seg-bright">NORMAL</span> ~/nocturne/2026-08-12-calm-software.md</span>
+  <span><span class="seg-bright" id="scroll-pct">Top</span> · 3 min read · utf-8</span>
+</footer>
+
+</body>
+</html>

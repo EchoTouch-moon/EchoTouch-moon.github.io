@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>About — Ink &amp; Marginalia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="About this site: fonts, machinery, and contact.">
+  <meta property="og:title" content="About — Ink & Marginalia">
+  <meta property="og:description" content="About this site: fonts, machinery, and contact.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=EB+Garamond:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css?v=12">
+      <script src="assets/app.js" defer></script>
+  <script src="assets/scene-rain.js?v=15" defer></script>
+  <script src="assets/scene-willow.js?v=20" defer></script>
+  <script src="assets/scene-waves.js?v=2" defer></script>
+  <script src="assets/scene-clouds.js?v=35" defer></script>
+  <script src="assets/scene-scroll.js?v=1" defer></script>
+  <script src="assets/dither.js?v=26" defer></script>
+</head>
+<body>
+
+  <div class="header-image">
+    <canvas id="ink-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="masthead"><a href="./">Ink&nbsp;&amp;&nbsp;Marginalia</a></div>
+      <nav class="navigation" aria-label="primary">
+        <a href="./">entries</a>
+        <a href="about.html">about</a>
+        <a href="archive.html">archive</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1 class="page-title">About</h1>
+
+      <div class="portrait-row">
+        <div class="monogram" aria-hidden="true">V.</div>
+        <p>Hello — I write essays about software craft, quiet interfaces, and
+        the long memory of the web. By day I build systems; by night I take
+        them apart to see what they were trying to say.</p>
+      </div>
+
+      <h2>Colophon</h2>
+      <ul>
+        <li><strong>Type:</strong> Fraunces for headlines, EB Garamond for body,
+            IBM Plex Mono for code and dates.</li>
+        <li><strong>Banner:</strong> an original WebGL fragment shader with
+            pluggable scenes — rain on a pond (graded drizzle→storm),
+            drifting clouds, and a weeping willow in the wind. Pick one
+            with <code>?scene=rain|clouds|willow|dunes</code> and grade
+            the rain with <code>&amp;rain=drizzle|light|heavy|storm</code>,
+            or point the canvas at your own <code>data-src</code>
+            video/photo to dither it the same way.</li>
+        <li><strong>Machinery:</strong> hand-written HTML/CSS/JS. No framework,
+            no build step, no tracking. Each page is a single file you can read
+            from top to bottom.</li>
+        <li><strong>Hosting:</strong> any static host works — GitHub Pages,
+            Cloudflare Pages, or a folder on a Raspberry&nbsp;Pi under your desk.</li>
+      </ul>
+
+      <h2>Write here</h2>
+      <p>To publish a post: duplicate <code>post-template.html</code>, give it a
+      descriptive file name, replace the article content, then add its entry to
+      <code>index.html</code> and <code>archive.html</code>. The repository
+      README contains the complete checklist.</p>
+
+      <h2>Contact</h2>
+      <p>This starter intentionally ships without a public email address.
+      Add only the contact channels you actually want readers to use.</p>
+    </main>
+
+    <footer class="site">
+      <p>&copy; 2026 Ink &amp; Marginalia. Written in plain HTML.</p>
+      <p><a href="archive.html">Archive</a> · <a href="./">Entries</a></p>
+      <p class="footer-controls">
+        <span>Color scheme:</span>
+        <span id="theme-form" class="theme-form">
+          <label><input type="radio" name="theme" value="system"> <span>auto</span></label>,
+          <label><input type="radio" name="theme" value="light"> <span>light</span></label>,
+          <label><input type="radio" name="theme" value="dark"> <span>dark</span></label>.
+        </span>
+        <span class="footer-controls__sep">·</span>
+                        <span>Banner scene:</span>
+        <span id="scene-form" class="theme-form">
+          <label><input type="radio" name="scene" value="auto" checked> <span>auto</span></label>,
+          <label><input type="radio" name="scene" value="scroll"> <span>scroll</span></label>,
+          <label><input type="radio" name="scene" value="waves"> <span>waves</span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>.
+        </span></label>,
+          <label><input type="radio" name="scene" value="waves"> <span>waves</span></label>,
+          <label><input type="radio" name="scene" value="scroll" checked> <span>scroll</span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>.
+        </span></label>,
+          <label><input type="radio" name="scene" value="waves"> <span>waves</span></label>,
+          <label><input type="radio" name="scene" value="scroll" checked> <span>scroll</span></label>,
+          <label><input type="radio" name="scene" value="bamboo"> <span>bamboo</span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>.
+        </span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>.
+        </span>
+      </p>
+    </footer>
+  </div>
+
+</body>
+</html>

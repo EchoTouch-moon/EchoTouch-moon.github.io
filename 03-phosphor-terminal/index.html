@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>~/nocturne — phosphor terminal zine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Low frequency, high signal: a monospace journal served over plain HTTP.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
+
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topline">
+    <!-- keyboard legend for the listing below -->
+    <span><kbd class="hint">j</kbd>/<kbd class="hint">k</kbd> move ·
+          <kbd class="hint">/</kbd> search</span>
+    <span class="theme-form" id="theme-form">
+      tube:
+      <label><input type="radio" name="theme" value="phosphor"> <span>P1&nbsp;green</span></label>
+      <label><input type="radio" name="theme" value="amber"> <span>P3&nbsp;amber</span></label>
+    </span>
+  </div>
+
+  <div class="prompt-line" aria-hidden="false">
+    <span class="path">vesper@nocturne</span>:<span class="path">~/entries</span>$
+    <span id="typed-line" class="glow">ls -lt --human-readable</span>
+    <span class="cursor"></span>
+  </div>
+
+  <nav class="commands" aria-label="primary">
+    [<a href="./"><span class="cmd">entries</span></a>]
+    [<a href="#"><span class="cmd">archive</span></a>]
+    [<a href="post.html"><span class="cmd">latest</span></a>]
+    [<a href="about.html"><span class="cmd">about</span></a>]
+    [
+    <label style="display:inline-flex;gap:.4rem;align-items:center;">
+      <span class="cmd">&gt;</span>
+      <input id="search-box" type="search" placeholder="grep -i …"
+             style="background:var(--panel);border:1px solid var(--border);color:var(--text);
+                    font:inherit;padding:.15rem .5rem;border-radius:3px;width:11rem;">
+    </label>
+    ]
+  </nav>
+
+  <main>
+    <h2 class="listing-label">total <b>8</b> — sorted by mtime, newest first</h2>
+
+    <div class="dirlist" role="list">
+      <div class="row is-active" role="listitem">
+        <span class="perm">-rw-</span>
+        <span class="name"><a href="post.html">2026-08-12--calm-software-is-a-choice.md</a></span>
+        <span class="meta">6.2K · 3 mo</span>
+      </div>
+      <div class="row" role="listitem">
+        <span class="perm">-rw-</span>
+        <span class="name"><a href="post.html">2026-07-01--notes-from-a-386-laptop.md</a></span>
+        <span class="meta">9.8K · 2 mo</span>
+      </div>
+      <div class="row" role="listitem">
+        <span class="perm">-rw-</span>
+        <span class="name"><a href="post.html">2026-05-19--the-case-for-crts.md</a></span>
+        <span class="meta">4.4K · 3 mo</span>
+      </div>
+      <div class="row" role="listitem">
+        <span class="perm">-rw-</span>
+        <span class="name"><a href="post.html">2026-04-02--awk-one-liners-i-love.md</a></span>
+        <span class="meta">3.1K · 4 mo</span>
+      </div>
+      <div class="row" role="listitem">
+        <span class="perm">-rw-</span>
+        <span class="name"><a href="post.html">2026-02-21--hosting-on-a-toaster.md</a></span>
+        <span class="meta">7.7K · 6 mo</span>
+      </div>
+      <div class="row" role="listitem">
+        <span class="perm">-rw-</span>
+        <span class="name"><a href="post.html">2025-12-30--year-end-diff.txt</a></span>
+        <span class="meta">1.9K · 8 mo</span>
+      </div>
+    </div>
+
+    <p class="comment">all entries are plain text with a stylesheet;
+       no cookies, no scripts beyond this page, no telemetry.</p>
+  </main>
+
+</div>
+
+<footer class="statusbar">
+  <span><span class="seg-bright">NORMAL</span> ~/nocturne/entries</span>
+  <span>utf-8 · markdown · <span class="seg-bright" id="scroll-pct">All</span></span>
+</footer>
+
+</body>
+</html>

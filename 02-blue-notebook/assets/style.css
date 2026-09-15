@@ -1,0 +1,556 @@
+/* ============================================================
+   Template 02 · The Blue Notebook  (v2 — with the little soul)
+   Crisp blue journal in the spirit of lucumr.pocoo.org.
+   v2 adds the borrowed "little souls":
+   - 300ms theme cross-fade gated by data-initial-load
+   - View Transitions cross-fade on internal navigation
+   - duration tokens + one house ease (paco.me discipline)
+   - hover guards for touch (@media (hover:hover), paco.me)
+   - ink-thickening link underlines (cassidoo.co)
+   - gap-slide entry rows (manuelmoreale.com)
+   - heading anchors, footnote pairing, code copy, back-to-top,
+     footer almanac clock, external-link arrows, image fade-in
+   ============================================================ */
+
+:root {
+  color-scheme: light dark;
+
+  --bg:            light-dark(#ffffff, #14263e);  --text:          light-dark(#1c1c1c, #dce7f3);
+  --primary:       light-dark(#115ca1, #66b3ff);
+  --secondary:     light-dark(#cd0e0e, #ff7070);
+  --header-ink:    light-dark(#1b3156, #96afda);
+  --faded:         light-dark(#5f6b78, #a9bed2);
+  --border:        light-dark(#b6c2cc, #3d5474);
+  --code-bg:       light-dark(#eef1f3, #233b5e);
+  --code-block-bg: light-dark(#fafbfc, #0f1d31);
+  --ring:          light-dark(#1b3156, #96afda);
+
+  /* tide blues live in tide.js (faithful shader constants);
+     the band blends with --bg and uses --secondary for accents */
+
+  /* duration tokens — one house feel everywhere (paco.me) */
+  --fast: 80ms;
+  --med:  160ms;
+  --slow: 480ms;
+  --ease: cubic-bezier(0.25, 0.6, 0.3, 1);
+
+  font-family: "Lora", Georgia, serif;
+}
+
+/* Manual choices must override the operating-system preference in both
+   directions; color-scheme: light dark alone still follows the OS. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bg); scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Lora", Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+/* ---- the 300ms theme cross-fade (lucumr's trick: suppressed
+        on first paint via [data-initial-load], removed by JS) */
+html:not([data-initial-load="true"]) body,
+html:not([data-initial-load="true"]) a,
+html:not([data-initial-load="true"]) h1,
+html:not([data-initial-load="true"]) h2,
+html:not([data-initial-load="true"]) h3,
+html:not([data-initial-load="true"]) code,
+html:not([data-initial-load="true"]) tt,
+html:not([data-initial-load="true"]) pre,
+html:not([data-initial-load="true"]) blockquote,
+html:not([data-initial-load="true"]) th,
+html:not([data-initial-load="true"]) td,
+html:not([data-initial-load="true"]) hr,
+html:not([data-initial-load="true"]) .monogram,
+html:not([data-initial-load="true"]) .avatar-ring,
+html:not([data-initial-load="true"]) .band {
+  transition-duration: 300ms;
+  transition-property: background-color, color, border-color, box-shadow;
+}
+@media (prefers-reduced-motion: reduce), (update: slow) {
+  html:not([data-initial-load="true"]) body,
+  html:not([data-initial-load="true"]) a,
+  html:not([data-initial-load="true"]) h1,
+  html:not([data-initial-load="true"]) h2,
+  html:not([data-initial-load="true"]) h3,
+  html:not([data-initial-load="true"]) code,
+  html:not([data-initial-load="true"]) tt,
+  html:not([data-initial-load="true"]) pre,
+  html:not([data-initial-load="true"]) blockquote,
+  html:not([data-initial-load="true"]) th,
+  html:not([data-initial-load="true"]) td,
+  html:not([data-initial-load="true"]) hr,
+  html:not([data-initial-load="true"]) .monogram,
+  html:not([data-initial-load="true"]) .avatar-ring,
+  html:not([data-initial-load="true"]) .band {
+    transition-duration: 0s;
+  }
+}
+
+/* ---- cross-fade between pages (View Transitions, MPA) ---- */
+@view-transition { navigation: auto; }
+
+::selection { background: rgba(17, 92, 161, 0.18); color: inherit; }
+:root[data-theme="dark"] ::selection { background: rgba(102, 179, 255, 0.30); }
+
+a { color: var(--primary); }
+a:hover { color: var(--secondary); }
+
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+.container {
+  max-width: 44rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.1rem, 4vw, 1.5rem);
+}
+
+/* ------------------------------------------------ tide bands */
+
+.band { overflow: hidden; }
+.band canvas { display: block; width: 100%; height: 100%; }
+/* original site's proportions: 150px header band with the wave at
+   50px; a 450px footer band that is essentially a full ocean */
+.band-top { height: 150px; }
+.band-bottom { height: 450px; }
+@media (max-width: 700px) {
+  .band-top { height: 100px; }
+  .band-bottom { height: 300px; }
+}
+
+/* ---------------------------------- masthead + monogram ---- */
+
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-top: 1.6rem;
+  font-size: 1.06rem;
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  flex: none;
+  color: var(--header-ink);
+  font-family: "Merriweather", Georgia, serif;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.avatar-ring {
+  position: relative;
+  border-radius: 50%;
+  box-shadow: 0 0 9px var(--ring);
+  transition: box-shadow 0.25s ease;
+}
+@media (hover: hover) {
+  .avatar-ring:hover { box-shadow: 0 0 12px var(--secondary); }
+}
+/* a slow breathing pulse — the notebook is alive (subtle, 4s) */
+@media (prefers-reduced-motion: no-preference) {
+  .avatar-ring { animation: ring-breathe 4s ease-in-out infinite; }
+  @keyframes ring-breathe {
+    0%, 100% { box-shadow: 0 0 6px var(--ring); }
+    50%      { box-shadow: 0 0 11px var(--ring); }
+  }
+  .avatar-ring:hover { animation-play-state: paused; }
+}
+
+.masthead a { color: var(--header-ink); text-decoration: none; }
+
+.navigation {
+  display: flex;
+  gap: 1.35rem;
+  padding: 0.85rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--border);
+}
+.navigation a {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .22em;
+  transition: text-decoration-color var(--med) ease,
+              text-decoration-thickness var(--med) ease,
+              color var(--med) ease;
+}
+@media (hover: hover) {
+  .navigation a:hover {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: .16em;
+  }
+}
+
+/* -------------------------------------------------- entries */
+
+.entry-list { margin-top: 2rem; }
+
+.entry-overview {
+  display: grid;
+  grid-template-columns: 7.2rem 1fr;
+  gap: 1.15rem;
+  padding-block: 0.55rem 1.15rem;
+  /* the gap-slide: date and title part gently on hover
+     (borrowed from manuelmoreale.com's archive rows) */
+  transition: gap var(--med) ease-out;
+}
+@media (hover: hover) {
+  .entry-overview:hover { gap: 1.8rem; }
+}
+
+.entry-overview time {
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: right;
+  color: var(--faded);
+  padding-top: 0.42rem;
+  white-space: nowrap;
+  transition: color var(--med) ease;
+}
+@media (hover: hover) {
+  .entry-overview:hover time { color: var(--primary); }
+}
+
+.entry-overview h2 {
+  font-family: "Merriweather", Georgia, serif;
+  font-weight: 700;
+  font-size: 1.18rem;
+  line-height: 1.45;
+  margin: 0 0 0.15rem;
+  text-wrap: balance;
+}
+/* the signature trailing em-dash (nbsp keeps it glued to the last word) */
+.entry-overview h2 a::after { content: "\00a0—"; color: inherit; }
+.entry-overview h2 a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .22em;
+  transition: text-decoration-color var(--med) ease,
+              text-decoration-thickness var(--med) ease,
+              color var(--med) ease;
+}
+@media (hover: hover) {
+  .entry-overview h2 a:hover {
+    color: var(--secondary);
+    text-decoration-color: currentColor;
+    text-decoration-thickness: .14em;   /* ink thickens, cassidoo-style */
+  }
+}
+
+.entry-overview p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--faded);
+  line-height: 1.65;
+}
+
+.archive-callout {
+  color: var(--faded);
+  font-size: 0.92rem;
+}
+
+.archive-page,
+.about-page { padding-top: 2.2rem; }
+.archive-page + .entry-list { margin-top: 0.7rem; }
+
+hr.soft {
+  border: none;
+  border-bottom: 1px solid var(--border);
+  height: 10px;
+  box-shadow: 0 7px 7px -5px rgba(120, 130, 140, 0.35);
+  margin: 1.4rem 0 0;
+}
+
+/* -------------------------------------------------- article */
+
+article { padding-top: 2.4rem; }
+
+.post-date {
+  font-size: 0.86rem;
+  color: var(--faded);
+  margin: 0 0 0.3rem;
+}
+
+.date-warning {
+  font-style: italic;
+  color: light-dark(#a07f10, #eeb877);
+}
+
+article h1 {
+  font-family: "Merriweather", Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4.2vw, 1.95rem);
+  line-height: 1.4;
+  margin: 0 0 1.5rem;
+  text-wrap: balance;
+}
+article h1 a { color: var(--primary); text-decoration: none; }
+article h1 a:hover { color: var(--secondary); }
+
+.lede { font-family: "Merriweather", Georgia, serif; font-size: 1.04em; }
+
+h2, h3 {
+  color: var(--header-ink);
+  font-weight: 600;
+  line-height: 1.4;
+  text-wrap: balance;
+  scroll-margin-top: 1.2rem;
+}
+h2 { font-size: 1.32rem; margin: 2.2rem 0 0.65rem; }
+h3 { font-size: 1.08rem; margin: 1.8rem 0 0.45rem; }
+
+/* hover-reveal heading anchors */
+h2 .anchor, h3 .anchor {
+  margin-left: 0.35em;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity var(--med) ease;
+}
+@media (hover: hover) {
+  h2:hover .anchor, h3:hover .anchor { opacity: 0.55; }
+}
+h2 .anchor:focus-visible, h3 .anchor:focus-visible { opacity: 1; }
+@media (hover: none) {
+  h2 .anchor, h3 .anchor { opacity: 0.4; }
+}
+
+figure.float-right {
+  float: right;
+  margin: 0.3rem 0 1rem 1.4rem;
+  width: 150px;
+}
+figure.float-right svg { display: block; width: 100%; height: auto; }
+figcaption { font-size: 0.82rem; color: var(--faded); margin-top: 0.4rem; }
+
+article figure:not(.float-right) { margin: 1.8rem 0; }
+article figure:not(.float-right) svg,
+article figure:not(.float-right) img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+/* images fade in once decoded, never pop */
+@media (prefers-reduced-motion: no-preference) {
+  article img { opacity: 0; transition: opacity var(--slow) ease-out; }
+  article img.loaded, article img:not([src]) { opacity: 1; }
+}
+
+pre, code, tt { font-family: "Ubuntu Mono", ui-monospace, Menlo, monospace; }
+code, tt { background: var(--code-bg); border-radius: 3px; padding: 0.1em 0.38em; font-size: 0.9em; }
+
+pre {
+  position: relative;
+  background: var(--code-block-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  box-shadow: 0 0 4px rgba(125, 135, 148, 0.25);
+  padding: 0.9rem 1.2rem;
+  overflow-x: auto;
+  font-size: 0.87rem;
+  line-height: 1.6;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* code copy button — ghost until hovered or keyboard-focused */
+pre .copy-btn {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  border: 1px solid var(--border);
+  background: var(--code-block-bg);
+  color: var(--faded);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0.05rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--med) ease, color var(--med) ease;
+}
+@media (hover: hover) {
+  pre:hover .copy-btn { opacity: 1; }
+}
+pre .copy-btn:focus-visible { opacity: 1; }
+pre .copy-btn.ok { color: var(--primary); }
+
+.tok-kw  { color: #1668a8; font-style: italic; }
+.tok-str { color: #337a33; }
+.tok-com { color: #94a1ac; font-style: italic; }
+.tok-num { color: #9043c3; }
+
+/* Prism classes emitted by the Markdown build. */
+.token.keyword,
+.token.operator { color: #1668a8; }
+.token.keyword { font-style: italic; }
+.token.string { color: #337a33; }
+.token.comment { color: #94a1ac; font-style: italic; }
+.token.number,
+.token.boolean { color: #9043c3; }
+.token.function { color: #115ca1; }
+:root[data-theme="dark"] .tok-kw { color: #79bdf3; }
+:root[data-theme="dark"] .tok-str { color: #8ecf8e; }
+:root[data-theme="dark"] .tok-com { color: #6e8199; }
+:root[data-theme="dark"] .tok-num { color: #c3a1e8; }
+:root[data-theme="dark"] .token.keyword,
+:root[data-theme="dark"] .token.operator,
+:root[data-theme="dark"] .token.function { color: #79bdf3; }
+:root[data-theme="dark"] .token.string { color: #8ecf8e; }
+:root[data-theme="dark"] .token.comment { color: #6e8199; }
+:root[data-theme="dark"] .token.number,
+:root[data-theme="dark"] .token.boolean { color: #c3a1e8; }
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.15rem 0 0.15rem 1.2rem;
+  border-left: 3px solid var(--secondary);
+  color: var(--faded);
+  font-style: italic;
+}
+blockquote p { margin: 0.35rem 0; }
+
+ul, ol { padding-left: 1.4rem; }
+li { margin-block: 0.3rem; }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; margin: 1.4rem 0; }
+th, td { border: 1px solid var(--border); padding: 0.45rem 0.75rem; text-align: left; }
+th { background: var(--code-bg); color: var(--header-ink); }
+@media (hover: hover) {
+  tbody tr { transition: background-color var(--med) ease; }
+  tbody tr:hover { background: var(--code-bg); }
+}
+
+/* ------------------------------------ footnotes + pairing */
+
+sup a { font-size: 0.72em; padding-left: 0.12em; text-decoration: none; }
+
+.footnotes {
+  margin-top: 2.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.footnotes ol { padding-left: 1.2rem; }
+.footnotes li {
+  transition: opacity var(--med) ease;
+  margin-block: 0.45rem;
+}
+/* hover a reference: everything else dims, both ends light up */
+.footnotes.dim li { opacity: 0.35; }
+.footnotes li.lit, sup a.lit { opacity: 1; }
+sup a { transition: opacity var(--med) ease; }
+sup.dim-other { opacity: 0.4; }
+sup a.lit { color: var(--secondary); }
+
+/* --------------------------------- copy-as-markdown row -- */
+
+.markdown-links {
+  margin-top: 2.6rem;
+  font-size: 0.86rem;
+  color: var(--faded);
+}
+.flash-note {
+  position: fixed;
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+  background: var(--header-ink);
+  color: var(--bg);
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 0.84rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 50;
+}
+
+/* ------------------------------------------- external links */
+
+article a[href^="http"]::after {
+  content: " \2197";
+  font-size: 0.72em;
+  vertical-align: super;
+  opacity: 0.55;
+}
+
+/* --------------------------------------------- back to top */
+
+.to-top {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.4rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--code-block-bg);
+  color: var(--faded);
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(20, 38, 62, 0.18);
+  opacity: 0;
+  transform: translateY(160%);
+  transition: transform var(--slow) var(--ease),
+              opacity var(--slow) var(--ease),
+              color var(--med) ease,
+              border-color var(--med) ease;
+  z-index: 60;
+}
+.to-top.visible { opacity: 1; transform: none; }
+@media (hover: hover) {
+  .to-top:hover { color: var(--secondary); border-color: var(--secondary); }
+}
+
+/* -------------------------------------------------- footer */
+
+footer.site {
+  clear: both;
+  margin-top: 3.6rem;
+  padding: 1.3rem 0 2.4rem;
+  border-top: 1px solid var(--border);
+  color: var(--faded);
+  font-size: 0.88rem;
+}
+footer.site p { margin: 0.3rem 0; }
+
+#local-time { font-variant-numeric: tabular-nums; }
+
+.theme-form label { cursor: pointer; }
+.theme-form input:checked + span { text-decoration: underline; color: var(--text); }
+.theme-form input { accent-color: var(--primary); }
+
+@media (max-width: 560px) {
+  .entry-overview { grid-template-columns: 1fr; gap: 0.1rem; }
+  figure.float-right {
+    float: none;
+    width: min(72vw, 240px);
+    margin: 1.4rem auto;
+  }
+}

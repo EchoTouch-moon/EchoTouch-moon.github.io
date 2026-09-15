@@ -1,0 +1,373 @@
+/* ============================================================
+   Template 04 · The Nightjar Review
+   A literary-journal blog: cream paper, oxblood accents,
+   Tufte-style margin sidenotes, drop caps, SVG grain.
+   Intentionally contains ZERO JavaScript.
+   ============================================================ */
+
+:root {
+  --paper:     #f7f3e9;
+  --ink:       #201c15;
+  --oxblood:   #7e2a2a;
+  --gold:      #a98d52;
+  --muted:     #776e5d;
+  --hairline:  #d9cfba;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Scroll-driven reveals — pure CSS (no JS, keeping the template's
+   identity). Progressively enhanced: only browsers supporting
+   animation-timeline get it; reduced-motion users see static pages. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .piece, .featured, .ornament {
+      animation: nightjar-in both ease-out;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    @keyframes nightjar-in {
+      from { opacity: 0; transform: translateY(16px); }
+    }
+  }
+}
+
+html { background: var(--paper); }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 500px at 50% -100px, rgba(169, 141, 82, 0.07), transparent),
+    var(--paper);
+  color: var(--ink);
+  font-family: "Spectral", Georgia, serif;
+  font-weight: 300;
+  font-size: 1.08rem;
+  line-height: 1.85;
+}
+
+/* SVG grain overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.055;
+  z-index: 90;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a {
+  color: var(--oxblood);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color 0.18s ease, text-decoration-thickness 0.18s ease, color 0.18s ease;
+}
+@media (hover: hover) {
+  a:hover {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 0.14em;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  a { transition: none; }
+}
+:focus-visible { outline: 1.5px dotted var(--oxblood); outline-offset: 3px; }
+::selection { background: rgba(169, 141, 82, 0.25); }
+
+.sheet {
+  max-width: 58rem;
+  margin-inline: auto;
+  padding: clamp(1rem, 4vw, 2rem) clamp(1.1rem, 4vw, 2rem) 4rem;
+}
+
+.smallcaps { font-variant-caps: all-small-caps; letter-spacing: 0.18em; }
+
+.mono-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- masthead ---------- */
+
+.rule-double {
+  border-top: 3px double var(--ink);
+  margin-bottom: 0.35rem;
+}
+.rule-thin { border: none; border-top: 1px solid var(--hairline); margin: 0.9rem 0 0; }
+
+header.review { text-align: center; padding-top: 1rem; }
+
+h1.brand {
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 400;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.22em;
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+  margin: 0.6rem 0 0.25rem;
+}
+h1.brand a { color: inherit; text-decoration: none; }
+h1.brand a:hover { color: var(--oxblood); text-decoration-color: transparent; }
+
+.issue-line {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0;
+}
+
+nav.contents-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding-top: 0.75rem;
+  font-family: "Newsreader", Georgia, serif;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-size: 1rem;
+}
+nav.contents-nav a { color: var(--ink); }
+nav.contents-nav a:hover { color: var(--oxblood); }
+
+/* ---------- featured essay ---------- */
+
+.featured { text-align: center; padding: 2.8rem 0 2.2rem; }
+
+.kicker { margin-bottom: 0.6rem; }
+
+.featured h2 {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.9rem, 5.5vw, 3rem);
+  line-height: 1.2;
+  margin: 0 auto 0.8rem;
+  max-width: 34ch;
+}
+.featured .abstract {
+  max-width: 46ch;
+  margin-inline: auto;
+  color: var(--muted);
+  font-size: 0.99rem;
+  font-style: italic;
+}
+.byline {
+  margin-top: 0.9rem;
+  font-family: "Newsreader", Georgia, serif;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+  font-size: 0.92rem;
+}
+
+/* ---------- contents grid ---------- */
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1.2rem;
+  margin: 1.2rem 0 0.4rem;
+}
+.section-head h3 {
+  font-family: "Newsreader", Georgia, serif;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  font-size: 1.05rem;
+  margin: 0;
+}
+.section-head::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.toc-grid {
+  columns: 2;
+  column-gap: 3rem;
+  column-rule: 1px solid var(--hairline);
+  margin-top: 0.8rem;
+}
+@media (max-width: 700px) { .toc-grid { columns: 1; } }
+
+.piece {
+  break-inside: avoid;
+  position: relative;
+  padding: 1rem 0 1.05rem;
+  border-bottom: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: 2.6rem 1fr;
+  gap: 0.4rem;
+  transition: gap 0.18s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .piece { transition: none; }
+}
+
+.piece .no {
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 300;
+  font-size: 1.55rem;
+  color: var(--gold);
+  line-height: 1.05;
+  transition: color 0.18s ease;
+}
+
+.piece h4 {
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 450;
+  font-size: 1.13rem;
+  line-height: 1.35;
+  margin: 0;
+}
+.piece h4 a { color: inherit; }
+.piece h4 a:hover { color: var(--oxblood); }
+
+.piece p { margin: 0.15rem 0 0; font-size: 0.88rem; color: var(--muted); font-style: italic; line-height: 1.6; }
+
+@media (hover: hover) {
+  .piece:hover { gap: 0.9rem; }
+  .piece:hover p { color: var(--ink); }
+  .piece:hover .no { color: var(--oxblood); }
+}
+
+.ornament {
+  text-align: center;
+  color: var(--gold);
+  letter-spacing: 1.1em;
+  padding-left: 1.1em;      /* balance the trailing letter-space */
+  margin: 2.6rem 0;
+}
+
+/* ---------- article pages ---------- */
+
+.article-page { max-width: 44rem; margin-inline: auto; }
+
+@media (min-width: 1120px) {
+  /* reserve the right margin so sidenotes can live outside the text block */
+  .article-page { max-width: 42rem; margin-left: calc(50% - 27rem); margin-right: 0; }
+}
+
+.headnote { text-align: center; margin: 2.6rem 0 1.4rem; }
+.headline {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2rem, 5.5vw, 3.1rem);
+  line-height: 1.18;
+  margin: 0.4rem 0 0.7rem;
+}
+.standfirst {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1.06rem;
+  max-width: 48ch;
+  margin-inline: auto;
+}
+
+article.body-copy > p:first-of-type::first-letter {
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 400;
+  font-size: 3.9em;
+  float: left;
+  line-height: 0.78;
+  padding: 0.06em 0.09em 0 0;
+  color: var(--oxblood);
+}
+
+.pullquote {
+  margin: 2.6rem auto;
+  max-width: 26ch;
+  text-align: center;
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.65rem;
+  line-height: 1.45;
+}
+.pullquote::before { content: "“"; display: block; font-size: 2.4em; line-height: 0.6; color: var(--gold); }
+
+blockquote {
+  margin: 1.8rem 0;
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--gold);
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Tufte-style sidenotes */
+.sidenote {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.sidenote-num { color: var(--oxblood); font-family: "JetBrains Mono", monospace; font-size: 0.75rem; }
+
+@media (min-width: 1120px) {
+  .sidenote {
+    float: right;
+    clear: right;
+    margin-right: -13.5rem;
+    width: 12rem;
+    text-align: left;
+    margin-top: 0.2rem;
+  }
+}
+@media (max-width: 1119.9px) {
+  .sidenote { display: inline; }
+  .sidenote::before { content: " † "; color: var(--oxblood); }
+}
+
+pre {
+  background: #efe9da;
+  border: 1px solid var(--hairline);
+  border-radius: 3px;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.8rem;
+  line-height: 1.62;
+}
+code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.86em; background: #efe9da; padding: 0.1em 0.35em; border-radius: 3px; }
+pre code { background: none; padding: 0; }
+
+.end-mark { text-align: center; color: var(--oxblood); font-size: 1.1rem; margin-top: 2.8rem; letter-spacing: 0.8em; }
+
+footer.colophon {
+  text-align: center;
+  margin-top: 3.6rem;
+  padding-top: 1rem;
+  border-top: 3px double var(--ink);
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+}
+
+/* ---------- micro-interactions ---------- */
+
+/* external links get a small superscript arrow */
+a[href^="http"]::after {
+  content: " \2197";
+  font-size: 0.72em;
+  vertical-align: super;
+  opacity: 0.55;
+}
+
+/* keep long display titles from leaving one stranded word */
+.headline, .featured h2, .piece h4,
+article h2, article h3 { text-wrap: balance; }
+
+/* anchored headings land clear of the viewport edge when jumped to */
+h2[id] { scroll-margin-top: 2.5rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  img { animation: img-in 0.5s ease-out; }
+}
+@keyframes img-in { from { opacity: 0; } }

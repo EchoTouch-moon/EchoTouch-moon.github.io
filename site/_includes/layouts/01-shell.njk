@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }} — {{ sites.ink.name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ description or sites.ink.description }}">
+  <meta property="og:title" content="{{ title }} — {{ sites.ink.name }}">
+  <meta property="og:description" content="{{ description or sites.ink.description }}">
+  <meta property="og:type" content="{{ ogType or 'website' }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%232b1d10'/><circle cx='50' cy='50' r='42' fill='none' stroke='%23decba9' stroke-width='3'/><text x='50' y='63' text-anchor='middle' font-size='42' font-family='Georgia,serif' font-weight='bold' fill='%23fbf3e4'>ET</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=EB+Garamond:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script type="speculationrules">
+    { "prefetch": [ { "where": { "href_matches": "{{ ('/' ~ sites.ink.path ~ '/*') | url }}" }, "eagerness": "moderate" } ] }
+  </script>
+
+  <link rel="stylesheet" href="{{ ('/' ~ sites.ink.path ~ '/assets/style.css?v=15') | url }}">
+  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/app.js') | url }}" defer></script>
+  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-rain.js?v=15') | url }}" defer></script>
+  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-willow.js?v=20') | url }}" defer></script>
+  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-waves.js?v=2') | url }}" defer></script>
+  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-clouds.js?v=35') | url }}" defer></script>
+  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/scene-scroll.js?v=1') | url }}" defer></script>
+  <script src="{{ ('/' ~ sites.ink.path ~ '/assets/dither.js?v=27') | url }}" defer></script>
+</head>
+<body>
+  <div class="header-image">
+    <canvas id="ink-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="masthead"><a href="{{ ('/' ~ sites.ink.path ~ '/') | url }}">{{ sites.ink.name }}</a></div>
+      <nav class="navigation" aria-label="primary">
+        <a href="{{ ('/' ~ sites.ink.path ~ '/') | url }}"{% if current == 'entries' %} aria-current="page"{% endif %}>全部</a>
+        <a href="{{ ('/' ~ sites.ink.path ~ '/?cat=技术分析') | url }}" data-nav-filter="技术分析">技术分析</a>
+        <a href="{{ ('/' ~ sites.ink.path ~ '/?cat=日常感悟') | url }}" data-nav-filter="日常感悟">日常感悟</a>
+        <a href="{{ ('/' ~ sites.ink.path ~ '/archive.html') | url }}"{% if current == 'archive' %} aria-current="page"{% endif %}>归档</a>
+        <a href="{{ ('/' ~ sites.ink.path ~ '/about.html') | url }}"{% if current == 'about' %} aria-current="page"{% endif %}>关于</a>
+      </nav>
+    </header>
+
+    <main>
+      {{ content | safe }}
+    </main>
+
+    <footer class="site">
+      <p>&copy; 2026 {{ sites.ink.copyright }}. Built from Markdown.</p>
+      <p><a href="{{ ('/' ~ sites.ink.path ~ '/archive.html') | url }}">Archive</a> · <a href="{{ ('/' ~ sites.ink.path ~ '/about.html') | url }}">About this site</a></p>
+      <p class="footer-controls">
+        <span>Color scheme:</span>
+        <span id="theme-form" class="theme-form">
+          <label><input type="radio" name="theme" value="system"> <span>auto</span></label>,
+          <label><input type="radio" name="theme" value="light"> <span>light</span></label>,
+          <label><input type="radio" name="theme" value="dark"> <span>dark</span></label>.
+        </span>
+        <span class="footer-controls__sep">·</span>
+        <span>Banner scene:</span>
+        <span id="scene-form" class="theme-form">
+          <label><input type="radio" name="scene" value="auto" checked> <span>auto</span></label>,
+          <label><input type="radio" name="scene" value="scroll"> <span>scroll</span></label>,
+          <label><input type="radio" name="scene" value="waves"> <span>waves</span></label>,
+          <label><input type="radio" name="scene" value="rain"> <span>rain</span></label>,
+          <label><input type="radio" name="scene" value="willow"> <span>willow</span></label>,
+          <label><input type="radio" name="scene" value="clouds"> <span>clouds</span></label>.
+        </span>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
