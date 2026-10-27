@@ -50,18 +50,26 @@
     } else {
       let index = 0;
       let typing = true;
+      let timerId = null;
+
+      function scheduleTick(delay) {
+        if (!document.hidden) {
+          timerId = window.setTimeout(tick, delay);
+        }
+      }
 
       function tick() {
+        if (document.hidden) return;
         if (typing) {
           index += 1;
           mottoEl.textContent = fullText.slice(0, index);
           if (index >= fullText.length) {
             typing = false;
             mottoEl.classList.add("is-done");
-            window.setTimeout(tick, 4200);
+            scheduleTick(4200);
             return;
           }
-          window.setTimeout(tick, 120 + Math.random() * 80);
+          scheduleTick(120 + Math.random() * 80);
           return;
         }
 
@@ -70,11 +78,18 @@
         mottoEl.textContent = fullText.slice(0, index);
         if (index <= 0) {
           typing = true;
-          window.setTimeout(tick, 900);
+          scheduleTick(900);
           return;
         }
-        window.setTimeout(tick, 45);
+        scheduleTick(45);
       }
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+          if (timerId) window.clearTimeout(timerId);
+          tick();
+        }
+      });
 
       tick();
     }
@@ -102,8 +117,6 @@
   if (sceneForm) {
     const radios = sceneForm.querySelectorAll("input[name='scene']");
     function readActiveScene() {
-      const canvas = document.getElementById("ink-canvas");
-      if (canvas && canvas.dataset.activeScene) return canvas.dataset.activeScene;
       try {
         const q = new URLSearchParams(location.search).get("scene");
         if (q) return q;
@@ -118,9 +131,9 @@
       radios.forEach((r) => { r.checked = r.value === scene; });
     }
     syncSceneRadios(readActiveScene());
-    // Also sync if canvas activeScene was determined after script run
-    window.addEventListener("DOMContentLoaded", () => {
-      syncSceneRadios(readActiveScene());
+    document.addEventListener("ink:scenechange", (e) => {
+      const scene = e.detail && e.detail.scene;
+      if (scene) syncSceneRadios(scene);
     });
     sceneForm.addEventListener("change", (e) => {
       const scene = e.target.value;

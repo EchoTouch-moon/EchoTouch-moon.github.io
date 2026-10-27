@@ -73,6 +73,284 @@
     `;
   }
 
+  if (!window.__INK_SCENES.scroll) {
+    window.__INK_SCENES.scroll = `
+      float scene_scroll(vec2 p, float t) {
+        vec2 frag = gl_FragCoord.xy;
+        vec2 uv = frag / u_res;
+        vec2 texCoord = vec2(
+          u_texRect.x + uv.x * u_texRect.z,
+          1.0 - uv.y
+        );
+        texCoord = clamp(texCoord, 0.0, 1.0);
+
+        vec4 col = texture2D(u_tex, texCoord);
+        float stroke = col.r;
+
+        float edgeFade = 1.0;
+        if (uv.y < 0.03) edgeFade *= smoothstep(0.0, 0.03, uv.y);
+        if (uv.y > 0.97) edgeFade *= smoothstep(1.0, 0.97, uv.y);
+
+        return clamp(stroke * edgeFade, 0.0, 1.0);
+      }
+    `;
+  }
+
+  if (!window.__INK_SCENES.waves) {
+    window.__INK_SCENES.waves = `
+      float scene_waves(vec2 p, float t) {
+        vec2 frag = gl_FragCoord.xy;
+        vec2 uv = frag / u_res;
+        vec2 sampleCoord = vec2(uv.x, mix(uv.y, 1.0 - uv.y, u_isLight));
+        vec2 texCoord = u_texRect.xy + sampleCoord * u_texRect.zw;
+        vec4 texColor = texture2D(u_tex, texCoord);
+        float gray = texColor.r;
+        return clamp(mix(gray, 1.0 - gray, u_isLight), 0.0, 1.0);
+      }
+    `;
+  }
+
+  if (!window.__INK_SCENES.clouds) {
+    window.__INK_SCENES.clouds = `
+      float scene_clouds(vec2 p, float t) {
+        vec2 frag = gl_FragCoord.xy;
+        vec2 uv = frag / u_res;
+        vec2 sampleCoord = vec2(uv.x, mix(uv.y, 1.0 - uv.y, u_isLight));
+        vec2 texCoord = u_texRect.xy + sampleCoord * u_texRect.zw;
+        vec4 col = texture2D(u_tex, texCoord);
+        float gray = col.r;
+
+        float sharp = clamp((gray - 0.20) / 0.70, 0.0, 1.0);
+        sharp = sharp * sharp * (3.0 - 2.0 * sharp);
+
+        return clamp(mix(sharp, 1.0 - sharp, u_isLight), 0.0, 1.0);
+      }
+    `;
+  }
+
+  if (!window.__INK_SCENES.rain) {
+    window.__INK_SCENES.rain = `
+      float rain_segment(vec2 p, vec2 a, vec2 b, float width) {
+        vec2 ab = b - a;
+        float h = clamp(dot(p - a, ab) / max(dot(ab, ab), 0.000001), 0.0, 1.0);
+        float d = length(p - (a + ab * h));
+        return 1.0 - smoothstep(width, width * 1.8, d);
+      }
+
+      float rain_streak(vec2 p, vec2 tail, vec2 head) {
+        vec2 axis = head - tail;
+        float h = clamp(dot(p - tail, axis) / max(dot(axis, axis), 0.000001), 0.0, 1.0);
+        float headBias = smoothstep(0.0, 1.0, h);
+        float width = mix(0.0010, 0.0035, headBias);
+        float across = 1.0 - smoothstep(width, width * 1.9, length(p - (tail + axis * h)));
+        float tailFade = smoothstep(0.0, 0.22, h);
+        float weight = mix(0.10, 0.88, headBias * headBias);
+        return across * tailFade * weight;
+      }
+
+      float rain_ring(vec2 p, vec2 center, float radius, float squash, float width) {
+        vec2 q = p - center;
+        q.y /= squash;
+        float edge = abs(length(q) - radius);
+        return 1.0 - smoothstep(width, width * 1.8, edge);
+      }
+
+      float rain_dot(vec2 p, vec2 center, float radius) {
+        return 1.0 - smoothstep(radius, radius * 1.8, distance(p, center));
+      }
+
+      float scene_rain(vec2 p, float t) {
+        float inten = clamp(u_intensity, 0.0, 1.0);
+        float tone = 0.0;
+
+        for (int j = 0; j < 3; j++) {
+          float fj = float(j);
+          float bandY = 0.22 + fj * 0.23 + 0.004 * sin(p.x * (1.35 + fj * 0.19) + fj * 2.4);
+          float sx = p.x * (1.45 + fj * 0.12) + fj * 5.17;
+          float cell = floor(sx);
+          float within = fract(sx);
+          float present = step(0.62, hash(vec2(cell, 51.0 + fj * 7.0)));
+          float ends = smoothstep(0.08, 0.22, within) * (1.0 - smoothstep(0.70, 0.94, within));
+          float thread = 1.0 - smoothstep(0.0025, 0.0065, abs(p.y - bandY));
+          tone = max(tone, thread * ends * present * 0.30);
+        }
+
+        for (int i = 0; i < 48; i++) {
+          float fi = float(i);
+          float heavyBoost = smoothstep(0.55, 0.85, inten);
+          float activeChance = min(0.98, 0.14 + 0.82 * inten + 0.36 * heavyBoost);
+          if (hash(vec2(fi, 91.0)) > activeChance) { continue; }
+
+          float cycleLength = 2.20 + hash(vec2(fi, 83.0)) * 1.25;
+          float clock = t + hash(vec2(fi, 79.0)) * cycleLength;
+          float cycle = floor(clock / cycleLength);
+          float local = mod(clock, cycleLength);
+
+          float rx = hash(vec2(fi, 11.0) + cycle * 7.31);
+          float ry = hash(vec2(fi, 17.0) + cycle * 5.73);
+          float rs = hash(vec2(fi, 23.0) + cycle * 3.91);
+          float rl = hash(vec2(fi, 29.0) + cycle * 8.17);
+          float rw = hash(vec2(fi, 37.0) + cycle * 6.43);
+
+          float landY = 0.12 + ry * 0.72;
+          float landX = 0.08 + rx * max(u_aspect - 0.16, 0.1);
+          float perspective = mix(0.58, 1.0, 1.0 - landY);
+          float wind = 0.12 + rw * 0.06 + inten * 0.05;
+          float fallTime = mix(0.64, 0.34, inten) + rs * mix(0.18, 0.10, inten);
+
+          if (local < fallTime) {
+            float fall = local / fallTime;
+            float headY = mix(1.13, landY, fall);
+            float headX = landX - wind * (headY - landY);
+            float trail = (0.044 + rl * 0.045 + inten * 0.030) * perspective;
+            vec2 head = vec2(headX, headY);
+            vec2 tail = head + vec2(-wind * trail, trail);
+            float entry = smoothstep(0.02, 0.12, fall);
+            float streak = rain_streak(p, tail, head);
+            float bead = rain_dot(p, head, 0.0048) * 0.96;
+            tone = max(tone, max(streak, bead) * entry);
+          } else {
+            float age = local - fallTime;
+            vec2 hit = vec2(landX, landY);
+
+            if (age < 0.19) {
+              float splashPhase = age / 0.19;
+              float splashFade = 1.0 - smoothstep(0.50, 1.0, splashPhase);
+              float point = rain_dot(p, hit, 0.0070) * (1.0 - smoothstep(0.0, 0.12, age));
+              float crownHeight = 0.052 * perspective * (1.0 - splashPhase);
+              float crown = rain_segment(p, hit, hit + vec2(0.0, crownHeight), 0.0030) * splashFade;
+              float arc = sin(splashPhase * 3.14159265);
+              vec2 leftDrop = hit + vec2(-0.030 * splashPhase, 0.038 * arc) * perspective;
+              vec2 rightDrop = hit + vec2(0.034 * splashPhase, 0.032 * arc) * perspective;
+              float spray = max(rain_dot(p, leftDrop, 0.0038), rain_dot(p, rightDrop, 0.0035)) * splashFade;
+              tone = max(tone, max(point * 0.95, max(crown, spray) * 0.82));
+            }
+
+            float squash = 0.29 + 0.10 * perspective;
+            float ringWidth = 0.0044 + 0.0014 * perspective;
+            if (age < 0.88) {
+              float radius1 = (0.017 + age * (0.17 + 0.04 * inten)) * perspective;
+              float fade1 = 1.0 - smoothstep(0.42, 0.88, age);
+              float first = rain_ring(p, hit, radius1, squash, ringWidth);
+              tone = max(tone, first * fade1 * 0.68);
+            }
+
+            float secondAge = age - 0.13;
+            if (secondAge > 0.0 && secondAge < 0.72) {
+              float radius2 = (0.014 + secondAge * (0.14 + 0.03 * inten)) * perspective;
+              float fade2 = 1.0 - smoothstep(0.32, 0.72, secondAge);
+              float second = rain_ring(p, hit, radius2, squash, ringWidth * 0.88);
+              tone = max(tone, second * fade2 * 0.46);
+            }
+          }
+        }
+        return clamp(tone, 0.0, 1.0);
+      }
+    `;
+  }
+
+  if (!window.__INK_SCENES.willow) {
+    window.__INK_SCENES.willow = `
+      float xCore_willow(float u, float bx, float sway, float t, float phase) {
+        return bx + sway * u * u + 0.007 * sin(t * 2.4 + u * 9.0 + phase) * u;
+      }
+
+      float frond_willow(vec2 p, float bx, float top, float len,
+                         float phase, float dir, float t, float gust,
+                         float toneF, float leafS, float hw, float leafN) {
+        float s = (top - p.y) / len;
+        if (s <= 0.0 || s >= 1.0) return 0.0;
+
+        float sway = gust * (0.35 + 0.65 * sin(t * 0.9 + phase)) * dir;
+        sway = clamp(sway, -u_aspect * 0.030, u_aspect * 0.030);
+
+        float xc = xCore_willow(s, bx, sway, t, phase);
+        float hwT = hw * (1.0 - 0.45 * s);
+        float dCore = abs(p.x - xc);
+        float core = (1.0 - smoothstep(hwT * 0.55, hwT, dCore)) * 0.85;
+
+        float uc = s * leafN;
+        float k0 = floor(uc);
+        float leafAcc = 0.0;
+        for (int c = 0; c < 2; c++) {
+          float k = k0 - float(c);
+          if (k < 0.0 || k > leafN - 0.5) { continue; }
+
+          float hk1 = hash(vec2(k, 10.0 + phase));
+          if (hk1 > 0.88) { continue; }
+
+          float uk = (k + 0.5) / leafN;
+          float sideK = mod(k, 2.0) < 0.5 ? 1.0 : -1.0;
+
+          vec2 ap = vec2(xCore_willow(uk, bx, sway, t, phase), top - uk * len);
+          float hk2 = hash(vec2(k, 20.0 + phase));
+          float Lk = leafS * (0.020 + 0.013 * hk2) * (1.0 - 0.35 * uk);
+          float slope = 0.55 + 0.30 * hk2;
+          vec2 dirL = normalize(vec2(sideK * slope, -1.0));
+          vec2 tip = ap + dirL * Lk;
+
+          vec2 ab2 = tip - ap;
+          float sp2 = clamp(dot(p - ap, ab2) / dot(ab2, ab2), 0.0, 1.0);
+          float dl2 = distance(p, ap + ab2 * sp2);
+          float thick = leafS * (0.0034 + 0.0022 * (1.0 - sp2));
+          float lf = 1.0 - smoothstep(thick * 0.5, thick, dl2);
+          lf *= 0.70 + 0.30 * (1.0 - sp2);
+          leafAcc = max(leafAcc, lf);
+        }
+
+        float strand = max(core, leafAcc);
+        return strand * toneF * (0.72 + 0.28 * (1.0 - s * 0.5));
+      }
+
+      float willow_layer(vec2 p, float t, float gustG, float layer) {
+        float layerTone = 0.0;
+        float lane = floor(((p.x / max(u_aspect, 0.001) - 0.10) / 0.80) * 40.0);
+
+        for (int n = 0; n < 7; n++) {
+          float li = lane + float(n) - 3.0;
+          if (li < 0.0 || li >= 40.0) { continue; }
+
+          float fi = li + layer * 40.0;
+          float h1 = hash(vec2(fi, 1.0));
+          float h2 = hash(vec2(fi, 2.0));
+          float h3 = hash(vec2(fi, 3.0));
+          float h4 = hash(vec2(fi, 4.0));
+
+          float toneF = layer < 0.5 ? 0.34 + h2 * 0.14 : layer < 1.5 ? 0.52 + h2 * 0.16 : layer < 2.5 ? 0.76 + h2 * 0.18 : 0.84 + h3 * 0.12;
+          float len   = layer < 0.5 ? 0.16 + h3 * 0.30 : layer < 1.5 ? 0.32 + h3 * 0.30 : layer < 2.5 ? 0.48 + h3 * 0.40 : 0.10 + h3 * 0.14;
+          float hw    = layer < 0.5 ? 0.0018 + h4 * 0.0010 : layer < 1.5 ? 0.0024 + h4 * 0.0012 : layer < 2.5 ? 0.0030 + h4 * 0.0014 : 0.0032 + h4 * 0.0012;
+          float leafS = layer < 0.5 ? 0.75 + h4 * 0.25 : layer < 1.5 ? 0.95 + h4 * 0.30 : layer < 2.5 ? 1.15 + h4 * 0.40 : 1.30 + h4 * 0.30;
+          float leafN = clamp(floor(len * 22.0), 5.0, 18.0);
+
+          float gust  = gustG * (0.80 + 0.10 * layer - 0.05 * layer * layer);
+          gust = max(gust, 0.10);
+
+          float laneJitter = 0.15 + h1 * 0.70;
+          float bx = u_aspect * (0.10 + ((li + laneJitter) / 40.0) * 0.80);
+          float top = 0.98 + h4 * 0.08;
+          if (layer > 2.5) top = 0.96 + h4 * 0.05;
+
+          float dir = (h2 - 0.5) * 0.9 + (bx - u_aspect * 0.5) * 0.18;
+          float phase = h3 * 6.2831 + li * 0.73;
+
+          layerTone = max(layerTone, frond_willow(p, bx, top, len, phase, dir, t, gust, toneF, leafS, hw, leafN));
+        }
+
+        return layerTone;
+      }
+
+      float scene_willow(vec2 p, float t) {
+        float tone = 0.0;
+        float gustG = 0.15 + 0.10 * sin(t * 0.33 - 0.8) + 0.05 * sin(t * 0.85 + 1.4);
+
+        for (int layerIndex = 0; layerIndex < 4; layerIndex++) {
+          tone = max(tone, willow_layer(p, t, gustG, float(layerIndex)));
+        }
+        return clamp(tone, 0.0, 1.0);
+      }
+    `;
+  }
+
   const SESSION_SCENE_KEY = "ink-banner-scene";
   const RANDOM_SCENES = ["scroll", "waves", "rain", "willow", "clouds"];
 
@@ -483,26 +761,34 @@
       if (sceneName === "clouds") v.playbackRate = 0.5;
       v.src = getAssetPath(cfg.videoSrc);
 
-      const fb = new Image();
-      fb.crossOrigin = "anonymous";
-      fb.src = getAssetPath(cfg.fallbackSrc);
-      fb.onload = () => {
-        if (!mediaReady[sceneName]) mediaReady[sceneName] = true;
-      };
+      function loadFallback() {
+        if (fallbackImages[sceneName]) return;
+        const fb = new Image();
+        fb.crossOrigin = "anonymous";
+        fb.src = getAssetPath(cfg.fallbackSrc);
+        fb.onload = () => {
+          mediaReady[sceneName] = true;
+          draw(performance.now());
+        };
+        fallbackImages[sceneName] = fb;
+      }
+
+      v.addEventListener("error", () => {
+        loadFallback();
+      });
 
       v.addEventListener("loadeddata", () => {
         mediaReady[sceneName] = true;
         if (sceneName === "clouds") v.playbackRate = 0.5;
-        if (currentActiveVideo === v) v.play().catch(() => {});
+        if (currentActiveVideo === v) v.play().catch(() => loadFallback());
       });
       v.addEventListener("canplay", () => {
         mediaReady[sceneName] = true;
         if (sceneName === "clouds") v.playbackRate = 0.5;
-        if (currentActiveVideo === v) v.play().catch(() => {});
+        if (currentActiveVideo === v) v.play().catch(() => loadFallback());
       });
 
       videoElements[sceneName] = v;
-      fallbackImages[sceneName] = fb;
     }
   }
 
@@ -515,7 +801,9 @@
   function resize() {
     const rect = canvas.getBoundingClientRect();
     if (!rect.width) return;
-    const dpr = window.devicePixelRatio || 1;
+    const isMobile = window.innerWidth <= 640;
+    const maxDpr = isMobile ? 1.5 : 2.0;
+    const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     canvas.width = Math.round(rect.width * dpr);
     canvas.height = Math.round(rect.height * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -675,7 +963,23 @@
     }
   }
 
+  let rafId = null;
+  function startLoop() {
+    if (reduced || rafId !== null) return;
+    if (!document.hidden && canvasVisible) {
+      rafId = requestAnimationFrame(loop);
+    }
+  }
+
+  function stopLoop() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
   function loop(now) {
+    rafId = null;
     if (!document.hidden && canvasVisible) {
       if (needsResize) {
         needsResize = false;
@@ -685,23 +989,33 @@
         draw(now);
         lastFrame = now;
       }
+      if (!reduced) {
+        rafId = requestAnimationFrame(loop);
+      }
     }
-    if (!reduced) requestAnimationFrame(loop);
   }
 
   let visibilityObserver = null;
   if ("IntersectionObserver" in window) {
     visibilityObserver = new IntersectionObserver(([entry]) => {
+      const wasVisible = canvasVisible;
       canvasVisible = entry ? entry.isIntersecting : true;
       if (canvasVisible) lastFrame = -1000;
       updateVideoPlaybackState();
+      if (canvasVisible && !wasVisible) startLoop();
+      else if (!canvasVisible && wasVisible) stopLoop();
     }, { rootMargin: "80px 0px" });
     visibilityObserver.observe(canvas);
   }
 
   document.addEventListener("visibilitychange", () => {
     updateVideoPlaybackState();
-    if (!document.hidden && canvasVisible) lastFrame = -1000;
+    if (!document.hidden && canvasVisible) {
+      lastFrame = -1000;
+      startLoop();
+    } else if (document.hidden) {
+      stopLoop();
+    }
   });
 
   if ("ResizeObserver" in window) {
@@ -717,5 +1031,5 @@
 
   resize();
   draw(performance.now());
-  if (!reduced) requestAnimationFrame(loop);
+  startLoop();
 })();

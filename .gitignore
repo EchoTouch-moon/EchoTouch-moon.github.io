@@ -8,3 +8,9 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Local archived templates / drafts
+_archive/
+archive/
+archive-templates/
+0[2-5]-*

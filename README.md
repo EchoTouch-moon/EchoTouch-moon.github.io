@@ -1,8 +1,10 @@
-# 🖋 Creative Blog Templates — Markdown 双主题博客
+# 🖋 EchoTouch Blog — 东方水墨与 1-Bit 抖动画布静态博客
 
-01 **Dithered Ink** 与 02 **The Blue Notebook** 现在共用一套 Eleventy + Markdown 内容系统：文章只写一次，会自动生成两套不同排版的纯静态页面；03–05 仍保留为可直接打开的手写 HTML 模板。发布后的 01/02 没有前端框架运行时，原有 WebGL 动效、主题切换和阅读交互都被保留。
+基于 Eleventy + Markdown 构建的高性能纯静态个人博客，视觉核心采用 **01 Dithered Ink**（抖动水墨）风格：暖褐羊皮纸色调、从零手写的 WebGL 1-bit Bayer 点阵抖动画布、Fraunces / EB Garamond 优雅衬线排印与全套明暗主题。整站零重型前端框架运行时，代码轻盈纯粹，自动发布于 GitHub Pages。
 
 > 第一次运行：在本目录执行 `npm install`，随后执行 `npm run dev`，打开终端给出的本地地址。文章统一放在 `site/posts/`，可复制根目录的 `post-template.md` 开始写作。
+>
+> 💡 *注：模板 02–05（The Blue Notebook、Phosphor Terminal、The Nightjar Review、Afterglow）已完成本地归档，不再参与 Git 提交，确保线上博客仓库干净纯粹。*
 
 ---
 
